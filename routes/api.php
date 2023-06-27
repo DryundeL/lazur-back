@@ -15,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::group(['namespace' => 'App\Modules\Admin\Controllers', 'prefix' => 'admin'], function () {
+Route::prefix('admin')->group(function () {
     require base_path('app/Modules/Admin/Routes/api.php');
 });
