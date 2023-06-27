@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Admin\Controllers\Auth;
+namespace App\Modules\Admin\Auth\Controllers;
 
-use App\Modules\Admin\Requests\LoginAuthRequest;
-use App\Modules\Admin\Services\AuthService;
+use App\Modules\Admin\Auth\Requests\LoginAuthRequest;
+use App\Modules\Admin\Auth\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as Controller;

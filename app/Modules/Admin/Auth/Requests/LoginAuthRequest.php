@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Admin\Requests;
+namespace App\Modules\Admin\Auth\Requests;
 
 use App\Requests\BaseFormRequest as FormRequest;
 

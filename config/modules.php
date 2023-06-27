@@ -5,6 +5,8 @@ return [
     'base_namespace' => 'App\Modules',
 
     'modules' => [
-        'Admin'
+        'Admin' => [
+            'Auth',
+        ],
     ]
 ];

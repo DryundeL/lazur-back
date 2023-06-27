@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Modules\Admin\Controllers;
+use App\Modules\Admin\Auth\Controllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +15,9 @@ use App\Modules\Admin\Controllers;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    require base_path('app/Modules/Admin/Auth/Routes/api.php');
-});
+Route::post('/login', [Controllers\AuthController::class, 'login'])->name('admin.auth.login');
 
 Route::middleware('auth:admins')->group(function () {
-
+    Route::delete('/logout', [Controllers\AuthController::class, 'logout'])->name('admin.auth.logout');
 });
 

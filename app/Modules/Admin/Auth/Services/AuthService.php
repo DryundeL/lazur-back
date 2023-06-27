@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Admin\Services;
+namespace App\Modules\Admin\Auth\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
