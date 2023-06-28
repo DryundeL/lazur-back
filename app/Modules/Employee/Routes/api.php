@@ -14,16 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::prefix('admin')->group(function () {
-    require base_path('app/Modules/Admin/Routes/api.php');
+Route::prefix('auth')->group(function () {
+    require base_path('app/Modules/Employee/Auth/Routes/api.php');
 });
 
-Route::prefix('employee')->group(function () {
-    require base_path('app/Modules/Employee/Routes/api.php');
-});
+Route::middleware('auth:employees')->group(function () {
 
-Route::prefix('student')->group(function () {
-    require base_path('app/Modules/Student/Routes/api.php');
 });
 

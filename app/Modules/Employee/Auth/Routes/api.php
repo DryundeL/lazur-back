@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Modules\Employee\Auth\Controllers;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,16 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/login', [Controllers\AuthController::class, 'login'])->name('employee.auth.login');
 
-Route::prefix('admin')->group(function () {
-    require base_path('app/Modules/Admin/Routes/api.php');
-});
-
-Route::prefix('employee')->group(function () {
-    require base_path('app/Modules/Employee/Routes/api.php');
-});
-
-Route::prefix('student')->group(function () {
-    require base_path('app/Modules/Student/Routes/api.php');
+Route::middleware('auth:admins')->group(function () {
+    Route::delete('/logout', [Controllers\AuthController::class, 'logout'])->name('employee.auth.logout');
 });
 

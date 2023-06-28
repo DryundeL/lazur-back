@@ -44,6 +44,14 @@ return [
             'driver' => 'sanctum',
             'provider' => 'admins',
         ],
+        'students' => [
+            'driver' => 'sanctum',
+            'provider' => 'students',
+        ],
+        'employees' => [
+            'driver' => 'sanctum',
+            'provider' => 'employees',
+        ],
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -72,9 +80,17 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        'employees' => [
+            'driver' => 'eloquent',
+            'model' => App\Modules\Employee\Models\Employee::class,
+        ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Modules\Admin\Models\Admin::class,
+        ],
+        'students' => [
+            'driver' => 'eloquent',
+            'model' => App\Modules\Student\Models\Student::class,
         ],
         // 'users' => [
         //     'driver' => 'database',
@@ -105,6 +121,24 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'students' => [
+            'provider' => 'students',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'employees' => [
+            'provider' => 'employees',
+            'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
