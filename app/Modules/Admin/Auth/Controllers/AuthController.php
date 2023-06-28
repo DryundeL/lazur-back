@@ -2,12 +2,10 @@
 
 namespace App\Modules\Admin\Auth\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\BaseController as Controller;
 use App\Modules\Admin\Auth\Requests\LoginAuthRequest;
 use App\Modules\Admin\Auth\Services\AuthService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use App\Http\Controllers\BaseController as Controller;
-use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {

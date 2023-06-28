@@ -2,15 +2,12 @@
 
 namespace App\Modules\Employee\Auth\Services;
 
+use Illuminate\Support\Facades\Hash;
 use App\Modules\Employee\Auth\Resources\ProfileResource;
 use App\Modules\Employee\Models\Employee;
-use App\Services\BaseService;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use App\Services\BaseAuthService;
 
-class AuthService extends BaseService
+class AuthService extends BaseAuthService
 {
     /**
      * Login user.
@@ -36,15 +33,5 @@ class AuthService extends BaseService
             'extended_token' => $employee->extended_token,
             'extended_user_id' => $employee->extended_user_id,
         ];
-    }
-
-    /**
-     * Logout admin.
-     *
-     */
-    public function logout(): void
-    {
-        $employee = Auth::user();
-        $employee->currentAccessToken()->delete();
     }
 }

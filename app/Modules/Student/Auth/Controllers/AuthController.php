@@ -2,10 +2,10 @@
 
 namespace App\Modules\Student\Auth\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
 use App\Modules\Student\Auth\Requests\LoginAuthRequest;
 use App\Modules\Student\Auth\Services\AuthService;
-use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
