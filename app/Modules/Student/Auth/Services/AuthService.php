@@ -5,10 +5,12 @@ namespace App\Modules\Student\Auth\Services;
 use Illuminate\Support\Facades\Hash;
 use App\Modules\Student\Auth\Resources\ProfileResource;
 use App\Modules\Student\Models\Student;
-use App\Services\BaseAuthService;
+use App\Services\BaseService;
+use App\Traits\Authorizable;
 
-class AuthService extends BaseAuthService
+class AuthService extends BaseService
 {
+    use Authorizable;
     /**
      * Login user.
      *

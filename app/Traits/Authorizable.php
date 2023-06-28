@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Traits;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class BaseAuthService
+trait Authorizable
 {
     /**
      * Logout user.

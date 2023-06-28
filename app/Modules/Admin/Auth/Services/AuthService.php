@@ -3,11 +3,14 @@
 namespace App\Modules\Admin\Auth\Services;
 
 use Illuminate\Support\Facades\Hash;
-use App\Services\BaseAuthService;
 use App\Modules\Admin\Models\Admin;
+use App\Services\BaseService;
+use App\Traits\Authorizable;
 
-class AuthService extends BaseAuthService
+class AuthService extends BaseService
 {
+    use Authorizable;
+
     /**
      * Login user.
      *
