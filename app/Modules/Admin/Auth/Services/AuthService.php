@@ -2,13 +2,15 @@
 
 namespace App\Modules\Admin\Auth\Services;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Services\BaseService;
 use App\Modules\Admin\Models\Admin;
+use App\Services\BaseService;
+use App\Traits\Authorizable;
 
 class AuthService extends BaseService
 {
+    use Authorizable;
+
     /**
      * Login user.
      *
@@ -26,15 +28,5 @@ class AuthService extends BaseService
         $token = $admin->createToken('token')->plainTextToken;
 
         return $token;
-    }
-
-    /**
-     * Logout admin.
-     *
-     */
-    public function logout()
-    {
-        $admin = Auth::user();
-        $admin->currentAccessToken()->delete();
     }
 }

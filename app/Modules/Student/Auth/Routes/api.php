@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [Controllers\AuthController::class, 'login'])->name('student.auth.login');
 
-Route::middleware('auth:admins')->group(function () {
+Route::middleware('auth:students')->group(function () {
     Route::delete('/logout', [Controllers\AuthController::class, 'logout'])->name('student.auth.logout');
 });
 

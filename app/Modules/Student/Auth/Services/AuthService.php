@@ -2,14 +2,15 @@
 
 namespace App\Modules\Student\Auth\Services;
 
+use Illuminate\Support\Facades\Hash;
 use App\Modules\Student\Auth\Resources\ProfileResource;
 use App\Modules\Student\Models\Student;
 use App\Services\BaseService;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use App\Traits\Authorizable;
 
 class AuthService extends BaseService
 {
+    use Authorizable;
     /**
      * Login user.
      *
@@ -34,15 +35,5 @@ class AuthService extends BaseService
             'extended_token' => $student->extended_token,
             'extended_user_id' => $student->extended_user_id,
         ];
-    }
-
-    /**
-     * Logout admin.
-     *
-     */
-    public function logout(): void
-    {
-        $employee = Auth::user();
-        $employee->currentAccessToken()->delete();
     }
 }
