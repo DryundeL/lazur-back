@@ -82,7 +82,7 @@ return [
         ],
         'employees' => [
             'driver' => 'eloquent',
-            'model' => App\Modules\Employee\Models\Employee::class,
+            'model' => \App\Models\Employee::class,
         ],
         'admins' => [
             'driver' => 'eloquent',
@@ -90,7 +90,7 @@ return [
         ],
         'students' => [
             'driver' => 'eloquent',
-            'model' => App\Modules\Student\Models\Student::class,
+            'model' => \App\Models\Student::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

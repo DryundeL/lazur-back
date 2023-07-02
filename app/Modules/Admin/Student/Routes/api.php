@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Modules\Admin\Student\Controllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,12 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    require base_path('app/Modules/Admin/Auth/Routes/api.php');
-});
-
-Route::middleware('auth:admins')->group(function () {
-
-    require base_path('app/Modules/Admin/Student/Routes/api.php');
-});
+Route::apiResource('/students', Controllers\StudentController::class);
 

@@ -2,11 +2,11 @@
 
 namespace App\Modules\Employee\Auth\Services;
 
-use Illuminate\Support\Facades\Hash;
+use App\Models\Employee;
 use App\Modules\Employee\Auth\Resources\ProfileResource;
-use App\Modules\Employee\Models\Employee;
 use App\Services\BaseService;
 use App\Traits\Authorizable;
+use Illuminate\Support\Facades\Hash;
 
 class AuthService extends BaseService
 {

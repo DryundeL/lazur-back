@@ -4,7 +4,7 @@ namespace App\Modules\Student\Auth\Services;
 
 use Illuminate\Support\Facades\Hash;
 use App\Modules\Student\Auth\Resources\ProfileResource;
-use App\Modules\Student\Models\Student;
+use App\Models\Student;
 use App\Services\BaseService;
 use App\Traits\Authorizable;
 
