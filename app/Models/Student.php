@@ -44,4 +44,12 @@ class Student extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    /**
+     * The groups that belong to the Group.
+     */
+    public function group()
+    {
+        return $this->belongsTo(Group::class)->withTimestamps();
+    }
 }

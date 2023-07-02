@@ -45,4 +45,12 @@ class Employee extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    /**
+     * The groups that belong to the employee.
+     */
+    public function groups()
+    {
+        return $this->hasMany(Group::class)->withTimestamps();
+    }
 }
