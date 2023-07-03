@@ -21,7 +21,7 @@ class EmployeeController extends Controller
      */
     public function index(SortEmployeeRequest $request, EmployeeService $service)
     {
-        $responseArray = $service->search($request->validated(), 'first_name');
+        $responseArray = $service->search($request->validated(), 'FIO');
 
         if (!isset($responseArray['objects'])) {
             return $this->sendResponse($responseArray);

@@ -50,10 +50,18 @@ class BaseService
 
         if (isset($options['query']) and $columnForQuery) {
             $caseLoweredQuery = '%' . Str::lower($options['query']) . '%';
-            $dbSubQuery->where(function ($query) use ($columnForQuery, $tableName, $caseLoweredQuery) {
-                $query->whereRaw("lower({$tableName}.{$columnForQuery}) LIKE ?", [$caseLoweredQuery]);
-            });
+
+            if ($columnForQuery == 'FIO') {
+                $dbSubQuery->where(function($query) use ($caseLoweredQuery) {
+                    $query->orWhereRaw("lower(concat(last_name, ' ', first_name, ' ', patronymic_name)) LIKE ?", [$caseLoweredQuery]);
+                });
+            } else {
+                $dbSubQuery->where(function ($query) use ($columnForQuery, $tableName, $caseLoweredQuery) {
+                    $query->whereRaw("lower({$tableName}.{$columnForQuery}) LIKE ?", [$caseLoweredQuery]);
+                });
+            }
         }
+
         foreach ($filters as $column => $filter) {
 
             if (is_array($filter)) {
