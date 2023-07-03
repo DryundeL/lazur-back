@@ -13,7 +13,7 @@ class SortEmployeeRequest extends BaseSortRequest
      */
     protected $sortableFields = [
         'id',
-        'name',
+        'first_name',
     ];
 
     /**
@@ -24,8 +24,11 @@ class SortEmployeeRequest extends BaseSortRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
+            'query' => 'nullable|string',
+            'paginated' => 'nullable|integer',
             'id' => 'nullable|integer',
-            'name' => 'nullable|string',
+            'first_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
         ]);
     }
 }
