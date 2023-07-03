@@ -2,7 +2,6 @@
 
 namespace App\Requests;
 
-use App\Http\Requests\BaseFormRequest;
 use Illuminate\Validation\Rule;
 
 class BaseSortRequest extends BaseFormRequest

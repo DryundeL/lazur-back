@@ -4,8 +4,10 @@ namespace App\Modules\Admin\Employee\Controllers;
 
 use App\Models\Employee;
 use App\Models\Student;
+use App\Modules\Admin\Employee\Requests\SortEmployeeRequest;
 use App\Modules\Admin\Employee\Requests\StoreEmployeeRequest;
 use App\Modules\Admin\Employee\Requests\UpdateEmployeeRequest;
+use App\Modules\Admin\Employee\Resources\EmployeeCollection;
 use App\Modules\Admin\Employee\Resources\EmployeeResource;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
@@ -16,11 +18,21 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return PracticeCollection|Response
      */
-    public function index()
+    public function index(SortEmployeeRequest $request, EmployeeService $service)
     {
-        return 123;
+        $responseArray = $service->search($request->validated(), 'first_name');
+
+        if (!isset($responseArray['objects'])) {
+            return $this->sendResponse($responseArray);
+        } else {
+            $response = new EmployeeCollection($responseArray['objects']);
+            $meta = $responseArray['meta'];
+
+            return (isset($meta))
+                ? $response->additional($meta)
+                : $response;
+        }
     }
 
     /**
