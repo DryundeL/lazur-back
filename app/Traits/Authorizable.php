@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Employee;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -36,7 +37,9 @@ trait Authorizable
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
             'password' => $password,
-            'username' => Str::transliterate($user->last_name . '_' . $user->first_name . '_' . $user->id),
+            'username' => $user instanceof Employee
+                ? Str::transliterate('e_' . $user->last_name . '_' . $user->first_name . '_' . $user->id)
+                : Str::transliterate('s_' . $user->last_name . '_' . $user->first_name . '_' . $user->id),
         ];
 
         $userId = Http::withHeaders([
