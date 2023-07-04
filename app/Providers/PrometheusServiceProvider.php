@@ -9,7 +9,7 @@ use Spatie\Prometheus\Facades\Prometheus;
 
 class PrometheusServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         Prometheus::addGauge('Users count')
             ->value(fn() => Student::count() + Employee::count());

@@ -5,9 +5,17 @@ namespace App\Services;
 class PrometheusService extends BaseService
 {
 
-    /*
-     * Generate metric for prometheus
+    /**
+     * Create metric for prometheus
      *
+     * @param $metricName
+     * @param $metricType
+     * @param $value
+     * @param array $quantiles
+     * @param array $bucketValues
+     * @param int $countValue
+     * @param int $sumValue
+     * @return EmployeeResource
      */
     public function generateMetric($metricName, $metricType, $value, $quantiles = [], $bucketValues = [], $countValue = 0, $sumValue = 0): string
     {
