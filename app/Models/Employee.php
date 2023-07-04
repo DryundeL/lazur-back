@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -49,8 +51,8 @@ class Employee extends Authenticatable
     /**
      * The groups that belong to the employee.
      */
-    public function groups()
+    public function groups(): HasMany
     {
-        return $this->hasMany(Group::class)->withTimestamps();
+        return $this->hasMany(Group::class);
     }
 }

@@ -18,8 +18,11 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param SortEmployeeRequest $request
+     * @param EmployeeService $service
+     * @return EmployeeCollection|JsonResponse
      */
-    public function index(SortEmployeeRequest $request, EmployeeService $service)
+    public function index(SortEmployeeRequest $request, EmployeeService $service): EmployeeCollection|JsonResponse
     {
         $responseArray = $service->search($request->validated(), 'FIO');
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Modules\Admin\Group\Controllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,13 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    require base_path('app/Modules/Admin/Auth/Routes/api.php');
-});
-
-Route::middleware('auth:admins')->group(function () {
-    require base_path('app/Modules/Admin/Student/Routes/api.php');
-    require base_path('app/Modules/Admin/Employee/Routes/api.php');
-    require base_path('app/Modules/Admin/Group/Routes/api.php');
-});
-
+Route::apiResource('/groups', Controllers\GroupController::class);
+Route::apiResource('/groups.students', Controllers\GroupStudentController::class)->shallow()->except(['update', 'show', 'destroy']);
+Route::put('/groups/{group}/students', [Controllers\GroupStudentController::class, 'update']);

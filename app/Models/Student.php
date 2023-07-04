@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -48,8 +50,8 @@ class Student extends Authenticatable
     /**
      * The groups that belong to the Group.
      */
-    public function group()
+    public function group(): HasOne
     {
-        return $this->belongsTo(Group::class)->withTimestamps();
+        return $this->hasOne(Group::class);
     }
 }
