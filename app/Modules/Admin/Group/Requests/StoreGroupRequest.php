@@ -24,8 +24,18 @@ class StoreGroupRequest extends FormRequest
      */
     public function rules()
     {
+        $educationTypes = [
+            'Очная',
+            'Заочная',
+            'Очно-заочная',
+        ];
+
         return [
             'name' => 'required|string|max:255',
+            'education_type' => [
+                'required', 'string',
+                Rule::in($educationTypes)
+            ],
             'employee_id' => 'required|exists:App\Models\Employee,id'
         ];
     }
