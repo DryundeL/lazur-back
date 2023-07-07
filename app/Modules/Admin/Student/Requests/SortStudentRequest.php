@@ -26,6 +26,8 @@ class SortStudentRequest extends BaseSortRequest
         return array_merge(parent::rules(), [
             'id' => 'nullable|integer',
             'name' => 'nullable|string',
+            'query_name' => 'nullable|string',
+            'group_id' => 'nullable|integer',
         ]);
     }
 }

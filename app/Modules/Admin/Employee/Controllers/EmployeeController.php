@@ -2,15 +2,15 @@
 
 namespace App\Modules\Admin\Employee\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\BaseController as Controller;
 use App\Models\Employee;
-use App\Models\Student;
+use App\Models\Group;
 use App\Modules\Admin\Employee\Requests\SortEmployeeRequest;
 use App\Modules\Admin\Employee\Requests\StoreEmployeeRequest;
 use App\Modules\Admin\Employee\Requests\UpdateEmployeeRequest;
 use App\Modules\Admin\Employee\Resources\EmployeeCollection;
 use App\Modules\Admin\Employee\Resources\EmployeeResource;
-use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\BaseController as Controller;
 use App\Modules\Admin\Employee\Services\EmployeeService;
 
 class EmployeeController extends Controller
@@ -24,7 +24,20 @@ class EmployeeController extends Controller
      */
     public function index(SortEmployeeRequest $request, EmployeeService $service): EmployeeCollection|JsonResponse
     {
-        $responseArray = $service->search($request->validated(), 'FIO');
+        $subQueryArray = [];
+        $filters = $request->validated();
+
+        if (isset($filters['group_id'])) {
+
+            $subQueryArray = [
+                'filterModel' => new Group,
+                'condition_id' => $filters['group_id']
+            ];
+
+            unset($filters['group_id']);
+        }
+
+        $responseArray = $service->search($filters, ['name' => 'first_name, last_name, patronymic_name'], $subQueryArray);
 
         if (!isset($responseArray['objects'])) {
             return $this->sendResponse($responseArray);

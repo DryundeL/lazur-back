@@ -2,13 +2,9 @@
 
 namespace App\Modules\Admin\Group\Services;
 
-use App\Models\Employee;
 use App\Models\Group;
-use App\Models\Student;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class GroupStudentService extends BaseService
 {
@@ -16,7 +12,6 @@ class GroupStudentService extends BaseService
     {
         $this->model = $group;
     }
-
 
     /**
      * Store a newly created resource in storage.

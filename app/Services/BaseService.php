@@ -19,24 +19,64 @@ class BaseService
      * Returns array with filtered data and meta
      *
      * @param array $options
-     * @param string|null $columnForQuery
-     * @param bool|$areAllObjects
+     * @param array|null $columnsForQuery
+     * @param array|null $subQueryArray
+     * @param bool $areAllObjects
      * @return array
      */
-    public function search(array $options, string $columnForQuery = null, bool $areAllObjects = false): array
+    public function search(array $options, array $columnsForQuery = null, array $subQueryArray = null, bool $areAllObjects = false): array
     {
+        $queries = array_filter($options, function ($v, $k) {
+            return str_starts_with($k, 'query');
+        }, ARRAY_FILTER_USE_BOTH);
+
         $filters = array_diff_key($options, array_flip([
             'sort_by',
             'sort_dir',
             'date_range',
             'paginated',
-            'query',
-        ]));
+        ]), $queries);
 
-        $dbSubQuery = $this->model::select();
+        if ($subQueryArray) {
+            $model = $subQueryArray['searchModel'] ?? $this->model;
 
-        $columns = $this->model->getFillable();
-        $tableName = $this->model->getTable();
+            $tableName = $model->getTable();
+            $columns = $model->getFillable();
+
+            $dbSubQuery = $model::select("{$tableName}.*"); //ok
+
+            if (isset($subQueryArray['external_table'])) {
+
+                if (isset($subQueryArray['searchModel'])) {
+                    $secondTable = $this->model->getTable();
+                } else {
+                    $secondTable = $subQueryArray['filterModel']->getTable();
+                }
+
+                $singFindTable = Str::singular($tableName);
+                $singSecondTable = Str::singular($secondTable);
+                $externalTableName = $subQueryArray['external_table'];
+
+                $dbSubQuery->leftJoin($externalTableName, "{$externalTableName}.{$singFindTable}_id",
+                    '=', "{$tableName}.id")
+                            ->leftJoin($secondTable, "{$externalTableName}.{$singSecondTable}_id",
+                    '=', "{$secondTable}.id")
+                            ->where("{$secondTable}.id", $subQueryArray['condition_id']);
+            } else {
+                $singSecondTable = Str::singular($tableName);
+                $additionalTable = $subQueryArray['filterModel']->getTable();
+
+                $dbSubQuery->leftJoin($additionalTable, "{$additionalTable}.{$singSecondTable}_id",
+                    '=',  "{$tableName}.id")
+                            ->where("{$additionalTable}.id", $subQueryArray['condition_id']);
+            }
+
+        } else {
+            $dbSubQuery = $this->model::select();
+
+            $columns = $this->model->getFillable();
+            $tableName = $this->model->getTable();
+        }
 
         if (!$areAllObjects) {
             if (isset($columns['is_active'])) {
@@ -48,16 +88,18 @@ class BaseService
             }
         }
 
-        if (isset($options['query']) and $columnForQuery) {
-            $caseLoweredQuery = '%' . Str::lower($options['query']) . '%';
+        if ($queries) {
 
-            if ($columnForQuery == 'FIO') {
-                $dbSubQuery->where(function($query) use ($caseLoweredQuery) {
-                    $query->orWhereRaw("lower(concat(last_name, ' ', first_name, ' ', patronymic_name)) LIKE ?", [$caseLoweredQuery]);
-                });
-            } else {
-                $dbSubQuery->where(function ($query) use ($columnForQuery, $tableName, $caseLoweredQuery) {
-                    $query->whereRaw("lower({$tableName}.{$columnForQuery}) LIKE ?", [$caseLoweredQuery]);
+            foreach ($queries as $queryKey => $query) {
+                $caseLoweredQuery = '%' . Str::lower($query) . '%';
+                $column = substr($queryKey, 6);
+
+                if (isset($columnsForQuery[$column])) {
+                    $column = $columnsForQuery[$column];
+                }
+
+                $dbSubQuery->where(function ($query) use ($column, $tableName, $caseLoweredQuery) {
+                    $query->whereRaw("lower(concat({$column})) LIKE ?", [$caseLoweredQuery]);
                 });
             }
         }
@@ -76,20 +118,20 @@ class BaseService
 
                 if (str_starts_with($column, 'min')) {
                     $column = substr($column, 4);
-                    $dbSubQuery->where($column, '>=', $filter);
+                    $dbSubQuery->where("{$tableName}.{$column}", '>=', $filter);
                 } else if (str_starts_with($column, 'max')) {
                     $column = substr($column, 4);
-                    $dbSubQuery->where($column, '<=', $filter);
+                    $dbSubQuery->where("{$tableName}.{$column}", '<=', $filter);
                 } else if (str_starts_with($column, 'without')) {
                     $column = substr($column, 8);
-                    $dbSubQuery->where($column, 0);
+                    $dbSubQuery->where("{$tableName}.{$column}", 0);
                 } else if (str_starts_with($column, 'is')) {
-                    $dbSubQuery->where($column, $filter);
+                    $dbSubQuery->where("{$tableName}.{$column}", $filter);
                 } else if (str_starts_with($column, 'has')) {
                     $column = substr($column, 4);
-                    $dbSubQuery->where($column, '>', 0);
+                    $dbSubQuery->where("{$tableName}.{$column}", '>', 0);
                 } else {
-                    $dbSubQuery->where(DB::raw("lower({$column})"), Str::lower($filter));
+                    $dbSubQuery->where(DB::raw("{$tableName}.{$column}"), Str::lower($filter));
                 }
 
             }
@@ -107,13 +149,12 @@ class BaseService
         }
 
         if (isset($options['date_range'])) {
-            if ($options['date_range'] == 'month') {
-                $dbQuery->whereBetween('updated_at', [now()->subMonth(), now()]);
-            } elseif ($options['date_range'] == 'week') {
-                $dbQuery->whereBetween('updated_at', [now()->subWeek(), now()]);
-            } elseif ($options['date_range'] == 'day') {
-                $dbQuery->whereBetween('updated_at', [now()->subDay(), now()]);
-            }
+            $gap = match ($options['date_range']) {
+                'month' => now()->subMonth(),
+                'week' => now()->subWeek(),
+                'day' => now()->subDay(),
+            };
+            $dbQuery->whereBetween('updated_at', [$gap, now()]);
         }
 
         if (isset($options['paginated']) && $options['paginated'] == 0) {

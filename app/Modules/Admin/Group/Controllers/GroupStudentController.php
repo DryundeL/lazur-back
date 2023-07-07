@@ -2,19 +2,15 @@
 
 namespace App\Modules\Admin\Group\Controllers;
 
-use App\Models\Group;
-use App\Modules\Admin\Group\Requests\SortGroupRequest;
-use App\Modules\Admin\Group\Requests\SortGroupStudentRequest;
-use App\Modules\Admin\Group\Requests\StoreGroupRequest;
-use App\Modules\Admin\Group\Requests\StoreGroupStudentRequest;
-use App\Modules\Admin\Group\Requests\UpdateGroupRequest;
-use App\Modules\Admin\Group\Resources\GroupCollection;
-use App\Modules\Admin\Group\Resources\GroupResource;
-use App\Modules\Admin\Group\Resources\GroupStudentCollection;
-use App\Modules\Admin\Group\Services\GroupService;
-use App\Modules\Admin\Group\Services\GroupStudentService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
+use App\Models\Group;
+use App\Models\Student;
+use App\Modules\Admin\Group\Requests\SortGroupStudentRequest;
+use App\Modules\Admin\Group\Requests\StoreGroupStudentRequest;
+use App\Modules\Admin\Group\Resources\GroupResource;
+use App\Modules\Admin\Group\Resources\StudentCollection;
+use App\Modules\Admin\Group\Services\GroupStudentService;
 
 class GroupStudentController extends Controller
 {
@@ -24,11 +20,29 @@ class GroupStudentController extends Controller
      * @param SortGroupStudentRequest $request
      * @param GroupStudentService $service
      * @param Group $group
-     * @return GroupResource|JsonResponse
+     * @return StudentCollection|JsonResponse
      */
-    public function index(SortGroupStudentRequest $request, GroupStudentService $service, Group $group): GroupResource|JsonResponse
+    public function index(SortGroupStudentRequest $request, GroupStudentService $service, Group $group): StudentCollection|JsonResponse
     {
-        //
+        $subQueryArray = [
+            'searchModel' => new Student,
+            'external_table' => 'group_student',
+            'condition_id' => $group->id
+        ];
+
+        $responseArray = $service->search($request->validated(),['name' => 'first_name, last_name, patronymic_name'], $subQueryArray);
+
+
+        if (!isset($responseArray['objects'])) {
+            return $this->sendResponse($responseArray);
+        } else {
+            $response = new StudentCollection($responseArray['objects']);
+            $meta = $responseArray['meta'];
+
+            return (isset($meta))
+                ? $response->additional($meta)
+                : $response;
+        }
     }
 
     /**

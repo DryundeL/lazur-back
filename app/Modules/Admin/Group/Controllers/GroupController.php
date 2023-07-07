@@ -2,15 +2,14 @@
 
 namespace App\Modules\Admin\Group\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\BaseController as Controller;
 use App\Models\Group;
 use App\Modules\Admin\Group\Requests\SortGroupRequest;
 use App\Modules\Admin\Group\Requests\StoreGroupRequest;
-use App\Modules\Admin\Group\Requests\UpdateGroupRequest;
 use App\Modules\Admin\Group\Resources\GroupCollection;
 use App\Modules\Admin\Group\Resources\GroupResource;
 use App\Modules\Admin\Group\Services\GroupService;
-use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\BaseController as Controller;
 
 class GroupController extends Controller
 {
@@ -23,7 +22,7 @@ class GroupController extends Controller
      */
     public function index(SortGroupRequest $request, GroupService $service): GroupCollection|JsonResponse
     {
-        $responseArray = $service->search($request->validated(), 'name');
+        $responseArray = $service->search($request->validated());
 
         if (!isset($responseArray['objects'])) {
             return $this->sendResponse($responseArray);

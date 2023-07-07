@@ -24,10 +24,10 @@ class SortGroupRequest extends BaseSortRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'query' => 'nullable|string',
+            'query_name' => 'nullable|string',
             'paginated' => 'nullable|integer',
             'id' => 'nullable|integer',
-            'name' => 'nullable|string',
+            'employee_id' => 'nullable|integer',
         ]);
     }
 }

@@ -24,11 +24,11 @@ class SortEmployeeRequest extends BaseSortRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'query' => 'nullable|string',
+            'query_name' => 'nullable|string',
+            'role' => 'nullable|string',
             'paginated' => 'nullable|integer',
             'id' => 'nullable|integer',
-            'first_name' => 'nullable|string',
-            'last_name' => 'nullable|string',
+            'group_id' => 'nullable|integer'
         ]);
     }
 }
