@@ -24,6 +24,7 @@ class GroupResource extends BaseResource
     {
         return array_merge(parent::toArray($request),[
             'name' => $this->name,
+            'education_type' => $this->education_type,
             'employee' => EmployeeResource::make($this->employee),
             'students' => StudentResource::collection($this->students)
         ]);
