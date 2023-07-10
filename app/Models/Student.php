@@ -54,4 +54,15 @@ class Student extends Authenticatable
     {
         return $this->hasOne(Group::class);
     }
+
+    /**
+     * Return unique key for redis
+     *
+     * @param int $id
+     * @return string
+     */
+    public static function getCacheKey(int $id)
+    {
+        return 'student_' . $id;
+    }
 }

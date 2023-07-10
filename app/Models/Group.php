@@ -39,4 +39,15 @@ class Group extends Model
     {
         return $this->belongsToMany(Student::class)->withTimestamps();
     }
+
+    /**
+     * Return unique key for redis
+     *
+     * @param int $id
+     * @return string
+     */
+    public static function getCacheKey(int $id)
+    {
+        return 'group_' . $id;
+    }
 }

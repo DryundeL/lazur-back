@@ -2,6 +2,8 @@
 
 namespace App\Modules\Admin\Employee\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
 use App\Models\Employee;
@@ -68,11 +70,15 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Employee $employee
+     * @param int $id
      * @return EmployeeResource
      */
-    public function show(Employee $employee): EmployeeResource
+    public function show(int $id): EmployeeResource
     {
+        $employee = Cache::remember(Employee::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
+            return Employee::findOrFail($id);
+        });
+
         return new EmployeeResource($employee);
     }
 

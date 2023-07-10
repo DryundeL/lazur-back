@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -43,7 +46,7 @@ class BaseService
             $tableName = $model->getTable();
             $columns = $model->getFillable();
 
-            $dbSubQuery = $model::select("{$tableName}.*"); //ok
+            $dbSubQuery = $model::select("{$tableName}.*");
 
             if (isset($subQueryArray['external_table'])) {
 
@@ -63,10 +66,10 @@ class BaseService
                     '=', "{$secondTable}.id")
                             ->where("{$secondTable}.id", $subQueryArray['condition_id']);
             } else {
-                $singSecondTable = Str::singular($tableName);
+                $singFirstTable = Str::singular($tableName);
                 $additionalTable = $subQueryArray['filterModel']->getTable();
 
-                $dbSubQuery->leftJoin($additionalTable, "{$additionalTable}.{$singSecondTable}_id",
+                $dbSubQuery->leftJoin($additionalTable, "{$additionalTable}.{$singFirstTable}_id",
                     '=',  "{$tableName}.id")
                             ->where("{$additionalTable}.id", $subQueryArray['condition_id']);
             }
@@ -205,6 +208,7 @@ class BaseService
         $model->fill($attributes);
         $model->save();
         $model->refresh();
+        Cache::put($model->getCacheKey($model->id), $model, Carbon::now()->addMinutes(15));
 
         return $model;
     }
@@ -232,6 +236,7 @@ class BaseService
         $model = $this->find($id);
         $model->update($attributes);
         $model->refresh();
+        Cache::put($model->getCacheKey($id), $model, Carbon::now()->addMinutes(15));
 
         return $model;
     }
@@ -244,6 +249,7 @@ class BaseService
      */
     public function destroy(int $id): bool
     {
+        Cache::forget($this->model->getCacheKey($id));
         return $this->find($id)->delete();
     }
 
@@ -255,6 +261,10 @@ class BaseService
      */
     public function massDestroy(array $ids): bool
     {
+        foreach ($ids as $id) {
+            Cache::forget($this->model->getCacheKey($id));
+        }
+
         return $this->model->destroy($ids);
     }
 
