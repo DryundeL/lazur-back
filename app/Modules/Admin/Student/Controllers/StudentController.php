@@ -2,6 +2,8 @@
 
 namespace App\Modules\Admin\Student\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
 use App\Models\Group;
@@ -69,11 +71,15 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Student $student
+     * @param int $id
      * @return StudentResource
      */
-    public function show(Student $student): StudentResource
+    public function show(int $id): StudentResource
     {
+        $student = Cache::remember(Student::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
+            return Student::findOrFail($id);
+        });
+
         return new StudentResource($student);
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Modules\Admin\Group\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
 use App\Models\Group;
@@ -53,11 +55,15 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Group $group
+     * @param int $id
      * @return GroupResource
      */
-    public function show(Group $group): GroupResource
+    public function show(int $id): GroupResource
     {
+        $group = Cache::remember(Group::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
+            return Group::findOrFail($id);
+        });
+
         return new GroupResource($group);
     }
 
