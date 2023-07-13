@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Admin\Group\Requests;
+namespace App\Modules\Admin\Audience\Requests;
 
 use App\Requests\BaseSortRequest;
 
-class SortGroupRequest extends BaseSortRequest
+class SortAudienceRequest extends BaseSortRequest
 {
     /**
      * The sortable fields.
@@ -13,7 +13,6 @@ class SortGroupRequest extends BaseSortRequest
      */
     protected $sortableFields = [
         'id',
-        'first_name',
     ];
 
     /**
@@ -24,11 +23,10 @@ class SortGroupRequest extends BaseSortRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'query_name' => 'nullable|string',
+            'query_corpus' => 'nullable|string',
             'paginated' => 'nullable|integer',
             'id' => 'nullable|integer',
-            'employee_id' => 'nullable|integer',
-            'speciality_id' => 'nullable|integer|exists:App\Models\Speciality,id'
+            'cabinet_number' => 'nullable|integer',
         ]);
     }
 }

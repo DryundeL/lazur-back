@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Admin\Group\Requests;
+namespace App\Modules\Admin\Speciality\Requests;
 
 use App\Requests\BaseSortRequest;
 
-class SortGroupRequest extends BaseSortRequest
+class SortSpecialityRequest extends BaseSortRequest
 {
     /**
      * The sortable fields.
@@ -13,7 +13,7 @@ class SortGroupRequest extends BaseSortRequest
      */
     protected $sortableFields = [
         'id',
-        'first_name',
+        'name',
     ];
 
     /**
@@ -27,8 +27,6 @@ class SortGroupRequest extends BaseSortRequest
             'query_name' => 'nullable|string',
             'paginated' => 'nullable|integer',
             'id' => 'nullable|integer',
-            'employee_id' => 'nullable|integer',
-            'speciality_id' => 'nullable|integer|exists:App\Models\Speciality,id'
         ]);
     }
 }

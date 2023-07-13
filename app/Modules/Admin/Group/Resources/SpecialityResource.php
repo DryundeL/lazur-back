@@ -5,14 +5,14 @@ namespace App\Modules\Admin\Group\Resources;
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
 
-class GroupResource extends BaseResource
+class SpecialityResource extends BaseResource
 {
     /**
      * The "data" wrapper that should be applied.
      *
      * @var string|null
      */
-    public static $wrap = 'group';
+    public static $wrap = 'speciality';
 
     /**
      * Transform the resource into an array.
@@ -24,10 +24,6 @@ class GroupResource extends BaseResource
     {
         return array_merge(parent::toArray($request),[
             'name' => $this->name,
-            'education_type' => $this->education_type,
-            'speciality' => SpecialityResource::make($this->speciality),
-            'employee' => EmployeeResource::make($this->employee),
-            'students' => StudentResource::collection($this->students)
         ]);
     }
 }

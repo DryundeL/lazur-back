@@ -36,7 +36,8 @@ class StoreGroupRequest extends FormRequest
                 'required', 'string',
                 Rule::in($educationTypes)
             ],
-            'employee_id' => 'required|exists:App\Models\Employee,id'
+            'employee_id' => 'required|exists:App\Models\Employee,id',
+            'speciality_id' => 'required|integer|exists:App\Models\Speciality,id',
         ];
     }
 

@@ -2,10 +2,10 @@
 
 namespace App\Modules\Admin\Group\Services;
 
-use App\Models\Employee;
-use App\Models\Group;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Group;
 
 class GroupService extends BaseService
 {
@@ -26,6 +26,7 @@ class GroupService extends BaseService
 
         $group->fill($attributes);
         $group->employee()->associate($attributes['employee_id']);
+        $group->speciality()->associate($attributes['speciality_id']);
         $group->save();
 
         return $group;
@@ -43,6 +44,7 @@ class GroupService extends BaseService
         $group = $this->find($id);
         $group->fill($attributes);
         $group->employee()->associate($attributes['employee_id']);
+        $group->speciality()->associate($attributes['speciality_id']);
         $group->save();
 
         return $group;
@@ -58,6 +60,7 @@ class GroupService extends BaseService
     {
         $group = $this->find($id);
         $group->students()->detach();
+        Cache::forget($this->model->getCacheKey($id));
         return $group->delete();
     }
 }
