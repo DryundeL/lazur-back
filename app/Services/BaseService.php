@@ -250,6 +250,7 @@ class BaseService
     public function destroy(int $id): bool
     {
         Cache::forget($this->model->getCacheKey($id));
+
         return $this->find($id)->delete();
     }
 
