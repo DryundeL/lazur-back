@@ -37,4 +37,12 @@ class Speciality extends Model
     {
         return $this->hasMany(Group::class);
     }
+
+    /**
+     * The disciplines that belong to the speciality.
+     */
+    public function disciplines(): HasMany
+    {
+        return $this->hasMany(Discipline::class);
+    }
 }
