@@ -2,7 +2,7 @@
 
 namespace App\Modules\Admin\ClassTime\Services;
 
-use App\Modules\Admin\Models\ClassTime;
+use App\Models\ClassTime;
 use App\Services\BaseService;
 
 class ClassTimeService extends BaseService

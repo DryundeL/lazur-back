@@ -3,12 +3,12 @@
 namespace App\Modules\Admin\ClassTime\Controllers;
 
 use App\Http\Controllers\BaseController as Controller;
+use App\Models\ClassTime;
 use App\Modules\Admin\ClassTime\Requests\SortClassTimeRequest;
 use App\Modules\Admin\ClassTime\Requests\StoreClassTimeRequest;
 use App\Modules\Admin\ClassTime\Resources\ClassTimeCollection;
 use App\Modules\Admin\ClassTime\Resources\ClassTimeResource;
 use App\Modules\Admin\ClassTime\Services\ClassTimeService;
-use App\Modules\Admin\Models\ClassTime;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
