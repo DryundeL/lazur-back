@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-
 
 class Group extends Model
 {
@@ -21,11 +18,11 @@ class Group extends Model
      */
     protected $fillable = [
         'name',
-        'education_type'
+        'education_type',
     ];
 
     /**
-     * The users that belong to the Group.
+     * The employee that belong to the Group.
      */
     public function employee(): BelongsTo
     {
@@ -49,5 +46,13 @@ class Group extends Model
     public static function getCacheKey(int $id)
     {
         return 'group_' . $id;
+    }
+
+    /**
+     * The speciality that belong to the Group.
+     */
+    public function speciality(): BelongsTo
+    {
+        return $this->belongsTo(Speciality::class);
     }
 }
