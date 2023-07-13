@@ -24,5 +24,6 @@ Route::middleware('auth:admins')->group(function () {
     require base_path('app/Modules/Admin/Speciality/Routes/api.php');
     require base_path('app/Modules/Admin/Audience/Routes/api.php');
     require base_path('app/Modules/Admin/Discipline/Routes/api.php');
+    require base_path('app/Modules/Admin/ClassTime/Routes/api.php');
 });
 
