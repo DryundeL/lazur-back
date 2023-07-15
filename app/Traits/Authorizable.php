@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Employee;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -22,7 +23,7 @@ trait Authorizable
      * Add personal access token user.
      *
      * @param $user
-     * @return void
+     * @return boolean
      */
     public function addToMatterMost($user)
     {
@@ -42,10 +43,14 @@ trait Authorizable
                 : Str::transliterate('s_' . $user->last_name . '_' . $user->first_name . '_' . $user->id),
         ];
 
-        $userId = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $adminToken,
-        ])->post(config('modules.mattermost_url') . '/api/v4/users', $userData)
-            ->json()['id'];
+        try {
+            $userId = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $adminToken,
+            ])->post(config('modules.mattermost_url') . '/api/v4/users', $userData)
+                ->json()['id'];
+        } catch (Exception $e) {
+            return false;
+        }
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $adminToken,
@@ -64,5 +69,7 @@ trait Authorizable
         $user->extended_user_id = $response->json()['user_id'] ?? null;
 
         $user->save();
+
+        return true;
     }
 }

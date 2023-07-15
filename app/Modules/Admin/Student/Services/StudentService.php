@@ -19,17 +19,15 @@ class StudentService extends BaseService
      * Store a newly created resource in storage.
      *
      * @param array $attributes
-     * @return Student $model
+     * @return array $model
      */
-    public function create(array $attributes): Student
+    public function createStudent(array $attributes): array
     {
         $student = $this->model;
 
         $student->fill($attributes);
         $student->save();
 
-        $this->addToMatterMost($student);
-
-        return $student;
+        return ['student' => $student, 'mm_status' => $this->addToMatterMost($student)];
     }
 }

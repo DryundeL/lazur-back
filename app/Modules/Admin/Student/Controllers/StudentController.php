@@ -2,18 +2,18 @@
 
 namespace App\Modules\Admin\Student\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
 use App\Models\Group;
 use App\Models\Student;
 use App\Modules\Admin\Student\Requests\SortStudentRequest;
+use App\Modules\Admin\Student\Requests\StoreStudentRequest;
 use App\Modules\Admin\Student\Requests\UpdateStudentRequest;
 use App\Modules\Admin\Student\Resources\StudentCollection;
 use App\Modules\Admin\Student\Resources\StudentResource;
-use App\Modules\Admin\Student\Requests\StoreStudentRequest;
 use App\Modules\Admin\Student\Services\StudentService;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class StudentController extends Controller
 {
@@ -61,11 +61,16 @@ class StudentController extends Controller
      * @param StudentService $service
      * @return StudentResource
      */
-    public function store(StoreStudentRequest $request, StudentService $service) : StudentResource
+    public function store(StoreStudentRequest $request, StudentService $service): StudentResource
     {
-        $student = $service->create($request->validated());
+        $result = $service->createStudent($request->validated());
 
-        return new StudentResource($student);
+        return (new StudentResource($result['student']))
+            ->additional([
+                'mm_status' => $result['mm_status']
+                    ? 'Успешная регистрация'
+                    : 'Данный аккаунт не был зарегистрирован в MatterMost'
+            ]);
     }
 
     /**
@@ -91,7 +96,7 @@ class StudentController extends Controller
      * @param Student $student
      * @return StudentResource
      */
-    public function update(UpdateStudentRequest $request, StudentService $service, Student $student) : StudentResource
+    public function update(UpdateStudentRequest $request, StudentService $service, Student $student): StudentResource
     {
         $student = $service->update($request->validated(), $student->id);
 
