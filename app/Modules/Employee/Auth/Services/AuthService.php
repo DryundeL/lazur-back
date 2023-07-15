@@ -28,13 +28,20 @@ class AuthService extends BaseService
 
         $token = $employee->createToken('token')->plainTextToken;
 
-        $this->addToMatterMost($employee);
+        $mmStatus = true;
+
+        if (!$employee->extended_token || !$employee->extended_user_id) {
+            $mmStatus = $this->addToMatterMost($employee);
+        }
 
         return [
             'employee' => ProfileResource::make($employee),
             'token' => $token,
             'extended_token' => $employee->extended_token,
             'extended_user_id' => $employee->extended_user_id,
+            'mm_status' => $mmStatus
+                ? 'Успешная авторизация'
+                : 'Пожалуйста, перезайдите в свой аккаунт через некоторое время из-за технических неполадок.'
         ];
     }
 }

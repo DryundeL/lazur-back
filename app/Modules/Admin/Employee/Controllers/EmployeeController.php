@@ -2,9 +2,6 @@
 
 namespace App\Modules\Admin\Employee\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
 use App\Models\Employee;
 use App\Models\Group;
@@ -14,6 +11,9 @@ use App\Modules\Admin\Employee\Requests\UpdateEmployeeRequest;
 use App\Modules\Admin\Employee\Resources\EmployeeCollection;
 use App\Modules\Admin\Employee\Resources\EmployeeResource;
 use App\Modules\Admin\Employee\Services\EmployeeService;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 class EmployeeController extends Controller
 {
@@ -60,11 +60,16 @@ class EmployeeController extends Controller
      * @param EmployeeService $service
      * @return EmployeeResource
      */
-    public function store(StoreEmployeeRequest $request, EmployeeService $service) : EmployeeResource
+    public function store(StoreEmployeeRequest $request, EmployeeService $service): EmployeeResource
     {
-        $student = $service->create($request->validated());
+        $result = $service->createEmployee($request->validated());
 
-        return new EmployeeResource($student);
+        return (new EmployeeResource($result['employee']))
+            ->additional([
+                'mm_status' => $result['mm_status']
+                    ? 'Успешная регистрация'
+                    : 'Данный аккаунт не был зарегистрирован в MatterMost'
+            ]);
     }
 
     /**
@@ -90,7 +95,7 @@ class EmployeeController extends Controller
      * @param Employee $employee
      * @return EmployeeResource
      */
-    public function update(UpdateEmployeeRequest $request, EmployeeService $service, Employee $employee) : EmployeeResource
+    public function update(UpdateEmployeeRequest $request, EmployeeService $service, Employee $employee): EmployeeResource
     {
         $employee = $service->update($request->validated(), $employee->id);
 

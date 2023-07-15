@@ -19,17 +19,15 @@ class EmployeeService extends BaseService
      * Store a newly created resource in storage.
      *
      * @param array $attributes
-     * @return Employee $model
+     * @return array $model
      */
-    public function create(array $attributes): Employee
+    public function createEmployee(array $attributes): array
     {
         $employee = $this->model;
 
         $employee->fill($attributes);
         $employee->save();
 
-        $this->addToMatterMost($employee);
-
-        return $employee;
+        return ['employee' => $employee, 'mm_status' => $this->addToMatterMost($employee)];
     }
 }
