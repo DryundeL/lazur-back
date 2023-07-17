@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Admin\Group\Resources;
+namespace App\Modules\Admin\Semester\Resources;
 
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
@@ -25,10 +25,6 @@ class GroupResource extends BaseResource
         return array_merge(parent::toArray($request),[
             'name' => $this->name,
             'education_type' => $this->education_type,
-            'speciality' => SpecialityResource::make($this->speciality),
-            'employee' => EmployeeResource::make($this->employee),
-            'students' => StudentResource::collection($this->students),
-            'semesters' => SemesterResource::collection($this->semesters)
         ]);
     }
 }

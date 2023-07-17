@@ -38,6 +38,8 @@ class StoreGroupRequest extends FormRequest
             ],
             'employee_id' => 'required|exists:App\Models\Employee,id',
             'speciality_id' => 'required|integer|exists:App\Models\Speciality,id',
+            'semesters_ids' => 'required|array',
+            'semesters_ids.*' => 'required|exists:App\Models\Semester,id',
         ];
     }
 

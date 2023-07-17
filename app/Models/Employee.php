@@ -61,7 +61,7 @@ class Employee extends Authenticatable
      * @param int $id
      * @return string
      */
-    public static function getCacheKey(int $id)
+    public static function getCacheKey(int $id): string
     {
         return 'employee_' . $id;
     }

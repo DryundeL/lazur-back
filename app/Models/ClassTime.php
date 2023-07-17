@@ -36,7 +36,7 @@ class ClassTime extends Model
      * @param int $id
      * @return string
      */
-    public static function getCacheKey(int $id)
+    public static function getCacheKey(int $id): string
     {
         return 'class_time_' . $id;
     }

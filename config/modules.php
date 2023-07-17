@@ -14,6 +14,14 @@ return [
     'modules' => [
         'Admin' => [
             'Auth',
+            'Audience',
+            'ClassTime',
+            'Discipline',
+            'Employee',
+            'Group',
+            'Semester',
+            'Speciality',
+            'Student',
         ],
     ]
 ];

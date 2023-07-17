@@ -28,6 +28,7 @@ class GroupService extends BaseService
         $group->employee()->associate($attributes['employee_id']);
         $group->speciality()->associate($attributes['speciality_id']);
         $group->save();
+        $group->semesters()->attach($attributes['semesters_ids']);
 
         return $group;
     }
@@ -47,6 +48,13 @@ class GroupService extends BaseService
         $group->speciality()->associate($attributes['speciality_id']);
         $group->save();
 
+        if ($attributes['semesters_ids']) {
+            $group->semesters()->sync($attributes['semesters_ids']);
+            $group->load('semesters');
+        } else {
+            $group->semesters()->detach();
+        }
+
         return $group;
     }
 
@@ -60,6 +68,7 @@ class GroupService extends BaseService
     {
         $group = $this->find($id);
         $group->students()->detach();
+        $group->semesters()->detach();
         Cache::forget($this->model->getCacheKey($id));
         return $group->delete();
     }

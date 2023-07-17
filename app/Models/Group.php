@@ -38,14 +38,11 @@ class Group extends Model
     }
 
     /**
-     * Return unique key for redis
-     *
-     * @param int $id
-     * @return string
+     * The semesters that belong to the Group.
      */
-    public static function getCacheKey(int $id)
+    public function semesters(): BelongsToMany
     {
-        return 'group_' . $id;
+        return $this->belongsToMany(Semester::class)->withTimestamps();
     }
 
     /**
@@ -55,4 +52,16 @@ class Group extends Model
     {
         return $this->belongsTo(Speciality::class);
     }
+
+    /**
+     * Return unique key for redis
+     *
+     * @param int $id
+     * @return string
+     */
+    public static function getCacheKey(int $id): string
+    {
+        return 'group_' . $id;
+    }
+
 }

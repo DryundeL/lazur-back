@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -50,9 +51,9 @@ class Student extends Authenticatable
     /**
      * The groups that belong to the Group.
      */
-    public function group(): HasOne
+    public function group(): BelongsToMany
     {
-        return $this->hasOne(Group::class);
+        return $this->belongsToMany(Group::class)->withTimestamps();
     }
 
     /**
@@ -61,7 +62,7 @@ class Student extends Authenticatable
      * @param int $id
      * @return string
      */
-    public static function getCacheKey(int $id)
+    public static function getCacheKey(int $id): string
     {
         return 'student_' . $id;
     }
