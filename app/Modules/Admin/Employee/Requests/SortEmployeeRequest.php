@@ -28,7 +28,8 @@ class SortEmployeeRequest extends BaseSortRequest
             'role' => 'nullable|string',
             'paginated' => 'nullable|integer',
             'id' => 'nullable|integer',
-            'group_id' => 'nullable|integer'
+            'group_id' => 'nullable|integer',
+            'discipline_id' => 'nullable|integer'
         ]);
     }
 }

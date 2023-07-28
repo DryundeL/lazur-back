@@ -136,7 +136,6 @@ class BaseService
                 } else {
                     $dbSubQuery->where(DB::raw("{$tableName}.{$column}"), Str::lower($filter));
                 }
-
             }
         }
 

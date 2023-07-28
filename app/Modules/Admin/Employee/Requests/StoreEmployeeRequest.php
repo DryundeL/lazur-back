@@ -39,7 +39,9 @@ class StoreEmployeeRequest extends FormRequest
             'role' => [
                 'required', 'string',
                 Rule::in($roles)
-            ]
+            ],
+            'disciplines' => 'required_if:role,teacher|array',
+            'disciplines.*' => 'integer|exists:App\Models\Discipline,id'
         ];
     }
 

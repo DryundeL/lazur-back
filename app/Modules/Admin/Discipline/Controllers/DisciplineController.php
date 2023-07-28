@@ -3,16 +3,16 @@
 namespace App\Modules\Admin\Discipline\Controllers;
 
 use App\Http\Controllers\BaseController as Controller;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Discipline;
-use App\Models\Group;
+use App\Models\Employee;
 use App\Modules\Admin\Discipline\Requests\SortDisciplineRequest;
 use App\Modules\Admin\Discipline\Requests\StoreDisciplineRequest;
 use App\Modules\Admin\Discipline\Resources\DisciplineCollection;
 use App\Modules\Admin\Discipline\Resources\DisciplineResource;
 use App\Modules\Admin\Discipline\Services\DisciplineService;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Cache;
 
 class DisciplineController extends Controller
 {
@@ -25,7 +25,21 @@ class DisciplineController extends Controller
      */
     public function index(SortDisciplineRequest $request, DisciplineService $service): DisciplineCollection|JsonResponse
     {
-        $responseArray = $service->search($request->validated());
+        $subQueryArray = [];
+        $filters = $request->validated();
+
+        if (isset($filters['employee_id'])) {
+
+            $subQueryArray = [
+                'filterModel' => new Employee,
+                'external_table' => 'discipline_employee',
+                'condition_id' => $filters['employee_id']
+            ];
+
+            unset($filters['employee_id']);
+        }
+
+        $responseArray = $service->search($filters, [], $subQueryArray);
 
         if (!isset($responseArray['objects'])) {
             return $this->sendResponse($responseArray);
@@ -61,7 +75,7 @@ class DisciplineController extends Controller
      */
     public function show(int $id): DisciplineResource
     {
-        $discipline = Cache::remember(Group::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
+        $discipline = Cache::remember(Discipline::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
             return Discipline::findOrFail($id);
         });
 

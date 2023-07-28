@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Modules\Admin\Discipline\Resources;
+namespace App\Modules\Admin\Employee\Resources;
 
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
+use App\Modules\Admin\Discipline\Resources\SpecialityResource;
 
 class DisciplineResource extends BaseResource
 {
@@ -26,7 +27,6 @@ class DisciplineResource extends BaseResource
             'name' => $this->name,
             'hours' => $this->hours,
             'speciality' => SpecialityResource::make($this->speciality),
-            'employees' => new EmployeeCollection($this->employees)
         ]);
     }
 }

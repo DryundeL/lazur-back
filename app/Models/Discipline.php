@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Discipline extends Model
 {
@@ -37,5 +38,15 @@ class Discipline extends Model
     public static function getCacheKey(int $id): string
     {
         return 'discipline_' . $id;
+    }
+
+    /**
+     * The employee that belong to the discipline.
+     *
+     * @return BelongsToMany
+     */
+    public function employees(): BelongsToMany
+    {
+        return $this->belongsToMany(Employee::class);
     }
 }

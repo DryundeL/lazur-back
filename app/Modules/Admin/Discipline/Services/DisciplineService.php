@@ -2,9 +2,10 @@
 
 namespace App\Modules\Admin\Discipline\Services;
 
-use App\Models\Discipline;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Discipline;
 
 class DisciplineService extends BaseService
 {
@@ -46,5 +47,20 @@ class DisciplineService extends BaseService
         $discipline->save();
 
         return $discipline;
+    }
+
+    /**
+     * Remove the specified resources from storage.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function destroy(int $id): bool
+    {
+        Cache::forget($this->model->getCacheKey($id));
+        $discipline = $this->find($id);
+        $discipline->employees()->detach();
+
+        return $discipline->delete();
     }
 }
