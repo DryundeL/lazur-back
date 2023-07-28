@@ -29,7 +29,6 @@ class SortDisciplineRequest extends BaseSortRequest
             'id' => 'nullable|integer',
             'name' => 'nullable|string',
             'hours' => 'nullable|integer',
-            'speciality_id' => 'nullable|integer'
         ]);
     }
 }

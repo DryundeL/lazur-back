@@ -25,8 +25,11 @@ class SpecialityService extends BaseService
     public function destroy(int $id): bool
     {
         $speciality = $this->find($id);
+
         $speciality->groups()->update(['speciality_id' => null]);
+        $speciality->disciplines()->detach();
         Cache::forget($this->model->getCacheKey($id));
+
         return $speciality->delete();
     }
 

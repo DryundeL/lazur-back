@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Discipline\Controllers;
 use App\Http\Controllers\BaseController as Controller;
 use App\Models\Discipline;
 use App\Models\Group;
+use App\Models\Speciality;
 use App\Modules\Admin\Discipline\Requests\SortDisciplineRequest;
 use App\Modules\Admin\Discipline\Requests\StoreDisciplineRequest;
 use App\Modules\Admin\Discipline\Resources\DisciplineCollection;

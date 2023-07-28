@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Speciality extends Model
@@ -41,8 +42,8 @@ class Speciality extends Model
     /**
      * The disciplines that belong to the speciality.
      */
-    public function disciplines(): HasMany
+    public function disciplines(): BelongsToMany
     {
-        return $this->hasMany(Discipline::class);
+        return $this->belongsToMany(Discipline::class, 'speciality_disciplines')->withTimestamps();
     }
 }

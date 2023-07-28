@@ -234,6 +234,7 @@ class BaseService
     public function update(array $attributes, int $id): Model
     {
         $model = $this->find($id);
+
         $model->update($attributes);
         $model->refresh();
         Cache::put($model->getCacheKey($id), $model, Carbon::now()->addMinutes(15));
