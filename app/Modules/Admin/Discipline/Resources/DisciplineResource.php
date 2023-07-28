@@ -2,7 +2,6 @@
 
 namespace App\Modules\Admin\Discipline\Resources;
 
-use App\Modules\Admin\Speciality\Resources\SpecialityCollection;
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
 

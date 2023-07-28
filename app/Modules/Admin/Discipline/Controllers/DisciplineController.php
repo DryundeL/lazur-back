@@ -26,7 +26,21 @@ class DisciplineController extends Controller
      */
     public function index(SortDisciplineRequest $request, DisciplineService $service): DisciplineCollection|JsonResponse
     {
-        $responseArray = $service->search($request->validated());
+        $subQueryArray = [];
+        $filters = $request->validated();
+
+        if (isset($filters['speciality_id'])) {
+
+            $subQueryArray = [
+                'filterModel' => new Speciality(),
+                'external_table' => 'speciality_disciplines',
+                'condition_id' => $filters['speciality_id']
+            ];
+
+            unset($filters['speciality_id']);
+        }
+
+        $responseArray = $service->search($filters, [], $subQueryArray);
 
         if (!isset($responseArray['objects'])) {
             return $this->sendResponse($responseArray);
