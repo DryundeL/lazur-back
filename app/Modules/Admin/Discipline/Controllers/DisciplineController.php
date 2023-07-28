@@ -33,7 +33,7 @@ class DisciplineController extends Controller
 
             $subQueryArray = [
                 'filterModel' => new Speciality(),
-                'external_table' => 'speciality_disciplines',
+                'external_table' => 'discipline_speciality',
                 'condition_id' => $filters['speciality_id']
             ];
 

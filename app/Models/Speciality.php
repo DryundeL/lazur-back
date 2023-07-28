@@ -44,6 +44,6 @@ class Speciality extends Model
      */
     public function disciplines(): BelongsToMany
     {
-        return $this->belongsToMany(Discipline::class, 'speciality_disciplines')->withTimestamps();
+        return $this->belongsToMany(Discipline::class)->withTimestamps();
     }
 }
