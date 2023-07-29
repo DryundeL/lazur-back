@@ -65,6 +65,7 @@ class EmployeeService extends BaseService
         Cache::forget($this->model->getCacheKey($id));
         $employee = $this->find($id);
         $employee->disciplines()->detach();
+        $employee->groups()->update(['employee_id' => null]);
 
         return $employee->delete();
     }
