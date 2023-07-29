@@ -28,7 +28,7 @@ class SortGroupRequest extends BaseSortRequest
             'paginated' => 'nullable|integer',
             'id' => 'nullable|integer',
             'employee_id' => 'nullable|integer',
-            'speciality_id' => 'nullable|integer|exists:App\Models\Speciality,id'
+            'speciality_ids' => 'nullable|array|exists:App\Models\Speciality,id'
         ]);
     }
 }

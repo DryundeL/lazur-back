@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Discipline\Controllers;
 use App\Http\Controllers\BaseController as Controller;
 use App\Models\Discipline;
 use App\Models\Group;
+use App\Models\Speciality;
 use App\Modules\Admin\Discipline\Requests\SortDisciplineRequest;
 use App\Modules\Admin\Discipline\Requests\StoreDisciplineRequest;
 use App\Modules\Admin\Discipline\Resources\DisciplineCollection;
@@ -25,7 +26,21 @@ class DisciplineController extends Controller
      */
     public function index(SortDisciplineRequest $request, DisciplineService $service): DisciplineCollection|JsonResponse
     {
-        $responseArray = $service->search($request->validated());
+        $subQueryArray = [];
+        $filters = $request->validated();
+
+        if (isset($filters['speciality_id'])) {
+
+            $subQueryArray = [
+                'filterModel' => new Speciality(),
+                'external_table' => 'discipline_speciality',
+                'condition_id' => $filters['speciality_id']
+            ];
+
+            unset($filters['speciality_id']);
+        }
+
+        $responseArray = $service->search($filters, [], $subQueryArray);
 
         if (!isset($responseArray['objects'])) {
             return $this->sendResponse($responseArray);

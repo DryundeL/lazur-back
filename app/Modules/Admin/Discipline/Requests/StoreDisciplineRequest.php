@@ -26,7 +26,7 @@ class StoreDisciplineRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'hours' => 'required|integer',
-            'speciality_id' => 'required|integer|exists:App\Models\Speciality,id',
+            'speciality_ids' => 'required|array|exists:App\Models\Speciality,id',
         ];
     }
 

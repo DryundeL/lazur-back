@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Discipline\Services;
 use App\Models\Discipline;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class DisciplineService extends BaseService
 {
@@ -22,10 +23,11 @@ class DisciplineService extends BaseService
     public function create(array $attributes): Discipline
     {
         $discipline = $this->model;
-
         $discipline->fill($attributes);
-        $discipline->speciality()->associate($attributes['speciality_id']);
+
         $discipline->save();
+        $discipline->specialities()->attach($attributes['speciality_ids']);
+        $discipline->refresh();
 
         return $discipline;
     }
@@ -42,9 +44,26 @@ class DisciplineService extends BaseService
         $discipline = $this->find($id);
 
         $discipline->fill($attributes);
-        $discipline->speciality()->associate($attributes['speciality_id']);
+        $discipline->specialities()->sync($attributes['speciality_ids']);
         $discipline->save();
 
         return $discipline;
+    }
+
+    /**
+     * Remove the specified resources from storage.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function destroy(int $id): bool
+    {
+        Cache::forget($this->model->getCacheKey($id));
+
+        $discipline = $this->find($id);
+
+        $discipline->specialities()->detach();
+
+        return $this->find($id)->delete();
     }
 }

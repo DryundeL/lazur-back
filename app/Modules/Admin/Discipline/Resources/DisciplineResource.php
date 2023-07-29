@@ -22,10 +22,10 @@ class DisciplineResource extends BaseResource
      */
     public function toArray($request): array
     {
-        return array_merge(parent::toArray($request),[
+        return array_merge(parent::toArray($request), [
             'name' => $this->name,
             'hours' => $this->hours,
-            'speciality' => SpecialityResource::make($this->speciality),
+            'speciality' => SpecialityCollection::make($this->specialities),
         ]);
     }
 }
