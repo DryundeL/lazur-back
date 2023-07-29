@@ -23,10 +23,11 @@ class DisciplineService extends BaseService
     public function create(array $attributes): Discipline
     {
         $discipline = $this->model;
-
         $discipline->fill($attributes);
-        $discipline->speciality()->associate($attributes['speciality_id']);
+
         $discipline->save();
+        $discipline->specialities()->attach($attributes['speciality_ids']);
+        $discipline->refresh();
 
         return $discipline;
     }
@@ -43,7 +44,7 @@ class DisciplineService extends BaseService
         $discipline = $this->find($id);
 
         $discipline->fill($attributes);
-        $discipline->speciality()->associate($attributes['speciality_id']);
+        $discipline->specialities()->sync($attributes['speciality_ids']);
         $discipline->save();
 
         return $discipline;
@@ -60,6 +61,7 @@ class DisciplineService extends BaseService
         Cache::forget($this->model->getCacheKey($id));
         $discipline = $this->find($id);
         $discipline->employees()->detach();
+        $discipline->specialities()->detach();
 
         return $discipline->delete();
     }

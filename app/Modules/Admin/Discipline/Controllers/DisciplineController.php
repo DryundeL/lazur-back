@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Discipline;
 use App\Models\Employee;
+use App\Models\Speciality;
 use App\Modules\Admin\Discipline\Requests\SortDisciplineRequest;
 use App\Modules\Admin\Discipline\Requests\StoreDisciplineRequest;
 use App\Modules\Admin\Discipline\Resources\DisciplineCollection;
@@ -35,8 +36,15 @@ class DisciplineController extends Controller
                 'external_table' => 'discipline_employee',
                 'condition_id' => $filters['employee_id']
             ];
-
             unset($filters['employee_id']);
+        } else if (isset($filters['speciality_id'])) {
+
+            $subQueryArray = [
+                'filterModel' => new Speciality(),
+                'external_table' => 'discipline_speciality',
+                'condition_id' => $filters['speciality_id']
+            ];
+            unset($filters['speciality_id']);
         }
 
         $responseArray = $service->search($filters, [], $subQueryArray);
@@ -62,9 +70,9 @@ class DisciplineController extends Controller
      */
     public function store(StoreDisciplineRequest $request, DisciplineService $service): DisciplineResource
     {
-        $group = $service->create($request->validated());
+        $discipline = $service->create($request->validated());
 
-        return new DisciplineResource($group);
+        return new DisciplineResource($discipline);
     }
 
     /**
