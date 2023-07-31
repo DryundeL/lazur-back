@@ -3,6 +3,10 @@
 namespace App\Modules\Admin\Employee\Controllers;
 
 use App\Http\Controllers\BaseController as Controller;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Discipline;
 use App\Models\Employee;
 use App\Models\Group;
 use App\Modules\Admin\Employee\Requests\SortEmployeeRequest;
@@ -11,9 +15,6 @@ use App\Modules\Admin\Employee\Requests\UpdateEmployeeRequest;
 use App\Modules\Admin\Employee\Resources\EmployeeCollection;
 use App\Modules\Admin\Employee\Resources\EmployeeResource;
 use App\Modules\Admin\Employee\Services\EmployeeService;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Cache;
 
 class EmployeeController extends Controller
 {
@@ -37,6 +38,15 @@ class EmployeeController extends Controller
             ];
 
             unset($filters['group_id']);
+        } else if (isset($filters['discipline_id'])) {
+
+            $subQueryArray = [
+                'filterModel' => new Discipline,
+                'external_table' => 'discipline_employee',
+                'condition_id' => $filters['discipline_id']
+            ];
+
+            unset($filters['discipline_id']);
         }
 
         $responseArray = $service->search($filters, ['name' => 'first_name, last_name, patronymic_name'], $subQueryArray);

@@ -38,4 +38,14 @@ class Discipline extends Model
     {
         return 'discipline_' . $id;
     }
+
+    /**
+     * The employee that belong to the discipline.
+     *
+     * @return BelongsToMany
+     */
+    public function employees(): BelongsToMany
+    {
+        return $this->belongsToMany(Employee::class);
+    }
 }

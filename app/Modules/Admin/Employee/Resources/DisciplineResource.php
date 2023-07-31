@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Modules\Admin\Discipline\Resources;
+namespace App\Modules\Admin\Employee\Resources;
 
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
+use App\Modules\Admin\Discipline\Resources\SpecialityResource;
 
 class DisciplineResource extends BaseResource
 {
@@ -22,11 +23,10 @@ class DisciplineResource extends BaseResource
      */
     public function toArray($request): array
     {
-        return array_merge(parent::toArray($request), [
+        return array_merge(parent::toArray($request),[
             'name' => $this->name,
             'hours' => $this->hours,
-            'speciality' => SpecialityCollection::make($this->specialities),
-            'employees' => new EmployeeCollection($this->employees),
+            'speciality' => SpecialityResource::make($this->speciality),
         ]);
     }
 }

@@ -28,6 +28,7 @@ class EmployeeResource extends BaseResource
             'last_name' => $this->last_name,
             'patronymic_name' => $this->patronymic_name,
             'role' => $this->role,
+            'disciplines' => new DisciplineCollection($this->disciplines)
         ]);
     }
 }

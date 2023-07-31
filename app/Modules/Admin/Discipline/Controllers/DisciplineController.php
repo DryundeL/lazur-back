@@ -3,17 +3,17 @@
 namespace App\Modules\Admin\Discipline\Controllers;
 
 use App\Http\Controllers\BaseController as Controller;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Discipline;
-use App\Models\Group;
+use App\Models\Employee;
 use App\Models\Speciality;
 use App\Modules\Admin\Discipline\Requests\SortDisciplineRequest;
 use App\Modules\Admin\Discipline\Requests\StoreDisciplineRequest;
 use App\Modules\Admin\Discipline\Resources\DisciplineCollection;
 use App\Modules\Admin\Discipline\Resources\DisciplineResource;
 use App\Modules\Admin\Discipline\Services\DisciplineService;
-use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Cache;
 
 class DisciplineController extends Controller
 {
@@ -29,14 +29,21 @@ class DisciplineController extends Controller
         $subQueryArray = [];
         $filters = $request->validated();
 
-        if (isset($filters['speciality_id'])) {
+        if (isset($filters['employee_id'])) {
+
+            $subQueryArray = [
+                'filterModel' => new Employee,
+                'external_table' => 'discipline_employee',
+                'condition_id' => $filters['employee_id']
+            ];
+            unset($filters['employee_id']);
+        } else if (isset($filters['speciality_id'])) {
 
             $subQueryArray = [
                 'filterModel' => new Speciality(),
                 'external_table' => 'discipline_speciality',
                 'condition_id' => $filters['speciality_id']
             ];
-
             unset($filters['speciality_id']);
         }
 
@@ -63,9 +70,9 @@ class DisciplineController extends Controller
      */
     public function store(StoreDisciplineRequest $request, DisciplineService $service): DisciplineResource
     {
-        $group = $service->create($request->validated());
+        $discipline = $service->create($request->validated());
 
-        return new DisciplineResource($group);
+        return new DisciplineResource($discipline);
     }
 
     /**
@@ -76,7 +83,7 @@ class DisciplineController extends Controller
      */
     public function show(int $id): DisciplineResource
     {
-        $discipline = Cache::remember(Group::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
+        $discipline = Cache::remember(Discipline::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
             return Discipline::findOrFail($id);
         });
 

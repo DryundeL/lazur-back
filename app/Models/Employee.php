@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -64,5 +65,15 @@ class Employee extends Authenticatable
     public static function getCacheKey(int $id): string
     {
         return 'employee_' . $id;
+    }
+
+    /**
+     * The discipline that belong to the employee.
+     *
+     * @return BelongsToMany
+     */
+    public function disciplines(): BelongsToMany
+    {
+        return $this->belongsToMany(Discipline::class);
     }
 }
