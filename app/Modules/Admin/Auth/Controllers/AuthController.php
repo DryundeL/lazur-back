@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Auth\Controllers;
 
+use App\Modules\Admin\Auth\Requests\CreateTokenForAdminRequest;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\BaseController as Controller;
 use App\Modules\Admin\Auth\Requests\LoginAuthRequest;
@@ -38,5 +39,17 @@ class AuthController extends Controller
         $authService->logout();
 
         return $this->sendResponse();
+    }
+
+    /**
+     * Generate user token for admin.
+     *
+     * @param CreateTokenForAdminRequest $request
+     * @param AuthService $authService
+     * @return JsonResponse
+     */
+    public function generateUserToken(CreateTokenForAdminRequest $request, AuthService $authService)
+    {
+        return $authService->generateTokenAuthForAdmin($request->validated());
     }
 }

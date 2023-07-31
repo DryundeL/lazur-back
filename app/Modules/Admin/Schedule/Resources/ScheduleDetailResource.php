@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Modules\Admin\Discipline\Resources;
+namespace App\Modules\Admin\Schedule\Resources;
 
+use App\Modules\Admin\Audience\Resources\AudienceResource;
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
 
-class DisciplineResource extends BaseResource
+class ScheduleDetailResource extends BaseResource
 {
     /**
      * The "data" wrapper that should be applied.
@@ -23,10 +24,8 @@ class DisciplineResource extends BaseResource
     public function toArray($request): array
     {
         return array_merge(parent::toArray($request), [
-            'name' => $this->name,
-            'hours' => $this->hours,
-            'speciality' => SpecialityCollection::make($this->specialities),
-            'employees' => EmployeeCollection::make($this->employees),
+            'employee' => EmployeeResource::make($this->employee),
+            'audience' => AudienceResource::make($this->audience),
         ]);
     }
 }

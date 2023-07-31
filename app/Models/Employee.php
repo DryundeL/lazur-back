@@ -76,4 +76,12 @@ class Employee extends Authenticatable
     {
         return $this->belongsToMany(Discipline::class);
     }
+
+    /**
+     * The schedule details that belong to the employee.
+     */
+    public function scheduleDetails(): HasMany
+    {
+        return $this->hasMany(ScheduleDetail::class);
+    }
 }

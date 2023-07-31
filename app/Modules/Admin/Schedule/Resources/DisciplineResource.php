@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Admin\Discipline\Resources;
+namespace App\Modules\Admin\Schedule\Resources;
 
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
