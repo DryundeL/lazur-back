@@ -17,6 +17,7 @@ use App\Modules\Admin\Auth\Controllers;
 Route::post('/login', [Controllers\AuthController::class, 'login'])->name('admin.auth.login');
 
 Route::middleware('auth:admins')->group(function () {
+    Route::post('/user_token', [Controllers\AuthController::class, 'generateUserToken']);
     Route::delete('/logout', [Controllers\AuthController::class, 'logout'])->name('admin.auth.logout');
 });
 

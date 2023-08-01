@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ClassTime extends Model
 {
@@ -39,5 +40,13 @@ class ClassTime extends Model
     public static function getCacheKey(int $id): string
     {
         return 'class_time_' . $id;
+    }
+
+    /**
+     * The schedules that belong to the class times.
+     */
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
     }
 }

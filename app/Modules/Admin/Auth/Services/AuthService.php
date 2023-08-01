@@ -2,6 +2,8 @@
 
 namespace App\Modules\Admin\Auth\Services;
 
+use App\Models\Employee;
+use App\Models\Student;
 use Illuminate\Support\Facades\Hash;
 use App\Modules\Admin\Models\Admin;
 use App\Services\BaseService;
@@ -28,5 +30,29 @@ class AuthService extends BaseService
         $token = $admin->createToken('token')->plainTextToken;
 
         return $token;
+    }
+
+    /**
+     * Login user.
+     *
+     * @param  array $attributes
+     * @return array
+     */
+    public function generateTokenAuthForAdmin(array $attributes): array
+    {
+        switch ($attributes['user_type']) {
+            case 'employee':
+                $user = Employee::find($attributes['id']);
+                break;
+            case 'student':
+                $user = Student::find($attributes['id']);
+                break;
+        }
+
+        if (!$user) {
+            return ['error' => 'Такого пользователя не существует'];
+        }
+
+        return ['token' => $user->createToken('token')->plainTextToken];
     }
 }

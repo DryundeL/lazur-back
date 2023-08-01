@@ -67,9 +67,11 @@ class GroupService extends BaseService
     public function destroy(int $id): bool
     {
         $group = $this->find($id);
+
         $group->students()->detach();
         $group->semesters()->detach();
         Cache::forget($this->model->getCacheKey($id));
+
         return $group->delete();
     }
 }
