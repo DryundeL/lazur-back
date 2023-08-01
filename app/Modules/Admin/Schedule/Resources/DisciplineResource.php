@@ -25,8 +25,8 @@ class DisciplineResource extends BaseResource
         return array_merge(parent::toArray($request), [
             'name' => $this->name,
             'hours' => $this->hours,
-            'speciality' => SpecialityCollection::make($this->specialities),
-            'employees' => EmployeeCollection::make($this->employees),
+            'speciality' => SpecialityResource::collection($this->specialities),
+            'employees' => EmployeeResource::collection($this->employees),
         ]);
     }
 }

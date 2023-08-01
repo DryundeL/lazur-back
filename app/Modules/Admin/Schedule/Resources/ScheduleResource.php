@@ -28,7 +28,7 @@ class ScheduleResource extends BaseResource
             'discipline' => DisciplineResource::make($this->discipline),
             'week_type' => $this->week_type,
             'day_of_week' => $this->day_of_week,
-            'schedule_details' => ScheduleDetailCollection::make($this->scheduleDetails),
+            'schedule_details' => ScheduleDetailResource::collection($this->scheduleDetails),
         ]);
     }
 }
