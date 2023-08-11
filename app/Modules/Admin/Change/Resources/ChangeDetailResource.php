@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Modules\Admin\Schedule\Resources;
+namespace App\Modules\Admin\Change\Resources;
 
 use App\Modules\Admin\Audience\Resources\AudienceResource;
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
 
-class ScheduleDetailResource extends BaseResource
+class ChangeDetailResource extends BaseResource
 {
     /**
      * The "data" wrapper that should be applied.
      *
      * @var string|null
      */
-    public static $wrap = 'schedule_detail';
+    public static $wrap = 'change_detail';
 
     /**
      * Transform the resource into an array.
