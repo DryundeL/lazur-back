@@ -19,6 +19,40 @@ class ChangeService extends BaseService
     /**
      * Store a newly created resource in storage.
      *
+     * @param Change $change
+     * @param $attributes
+     * @return void
+     */
+    private function createChangeDetail(Change $change, $attributes): void
+    {
+        foreach ($attributes['change_details'] as $changeInfo) {
+            $changeDetails = new ChangeDetail();
+
+            $changeDetails->change()->associate($change->id);
+            $changeDetails->employee()->associate($changeInfo['employee_id']);
+            $changeDetails->audience()->associate($changeInfo['audience_id']);
+
+            $changeDetails->save();
+        }
+    }
+
+    /**
+     * Associates change with some models
+     *
+     * @param Change $change
+     * @param $attributes
+     * @return void
+     */
+    private function associateWithChange(Change $change, $attributes): void
+    {
+        $change->discipline()->associate($attributes['discipline_id']);
+        $change->classTime()->associate($attributes['class_time_id']);
+        $change->group()->associate($attributes['group_id']);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
      * @param array $attributes
      * @return Change $model
      */
@@ -27,20 +61,10 @@ class ChangeService extends BaseService
         $change = $this->model;
 
         $change->fill($attributes);
-        $change->discipline()->associate($attributes['discipline_id']);
-        $change->classTime()->associate($attributes['class_time_id']);
-        $change->group()->associate($attributes['group_id']);
+        $this->associateWithChange($change, $attributes);
         $change->save();
 
-        foreach ($attributes['change_details'] as $changeDetail) {
-            $changeDetails = new ChangeDetail();
-
-            $changeDetails->change()->associate($change->id);
-            $changeDetails->employee()->associate($changeDetail['employee_id']);
-            $changeDetails->audience()->associate($changeDetail['audience_id']);
-
-            $changeDetails->save();
-        }
+        $this->createChangeDetail($change, $attributes);
 
         Cache::put($change->getCacheKey($change->id), $change, Carbon::now()->addMinutes(15));
 
@@ -59,23 +83,13 @@ class ChangeService extends BaseService
         $change = $this->find($id);
 
         $change->update($attributes);
-        $change->discipline()->associate($attributes['discipline_id']);
-        $change->classTime()->associate($attributes['class_time_id']);
-        $change->group()->associate($attributes['group_id']);
+        $this->associateWithChange($change, $attributes);
         $change->changeDetails()->delete();
         $change->save();
 
         Cache::put($change->getCacheKey($id), $change, Carbon::now()->addMinutes(15));
 
-        foreach ($attributes['change_details'] as $changeDetail) {
-            $changeDetails = new ChangeDetail();
-
-            $changeDetails->change()->associate($change->id);
-            $changeDetails->employee()->associate($changeDetail['employee_id']);
-            $changeDetails->audience()->associate($changeDetail['audience_id']);
-
-            $changeDetails->save();
-        }
+        $this->createChangeDetail($change, $attributes);
 
         return $change;
     }

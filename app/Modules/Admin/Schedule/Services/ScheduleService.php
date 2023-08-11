@@ -2,19 +2,52 @@
 
 namespace App\Modules\Admin\Schedule\Services;
 
-use App\Models\Schedule;
-use App\Models\ScheduleDetail;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-
+use App\Models\Schedule;
+use App\Models\ScheduleDetail;
 
 class ScheduleService extends BaseService
 {
     public function __construct(Schedule $schedule)
     {
         $this->model = $schedule;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Schedule $schedule
+     * @param $attributes
+     * @return void
+     */
+    private function createScheduleDetail(Schedule $schedule, $attributes): void
+    {
+        foreach ($attributes['schedule_details'] as $scheduleInfo) {
+            $scheduleDetails = new ScheduleDetail();
+
+            $scheduleDetails->schedule()->associate($schedule->id);
+            $scheduleDetails->employee()->associate($scheduleInfo['employee_id']);
+            $scheduleDetails->audience()->associate($scheduleInfo['audience_id']);
+
+            $scheduleDetails->save();
+        }
+    }
+
+    /**
+     * Associates schedule with some models
+     *
+     * @param Schedule $schedule
+     * @param $attributes
+     * @return void
+     */
+    private function associateWithSchedule(Schedule $schedule, $attributes): void
+    {
+        $schedule->discipline()->associate($attributes['discipline_id']);
+        $schedule->classTime()->associate($attributes['class_time_id']);
+        $schedule->group()->associate($attributes['group_id']);
     }
 
     /**
@@ -28,20 +61,12 @@ class ScheduleService extends BaseService
         $schedule = $this->model;
 
         $schedule->fill($attributes);
-        $schedule->discipline()->associate($attributes['discipline_id']);
-        $schedule->classTime()->associate($attributes['class_time_id']);
-        $schedule->group()->associate($attributes['group_id']);
+        $this->associateWithSchedule($schedule, $attributes);
         $schedule->save();
 
-        foreach ($attributes['schedule_details'] as $scheduleDetail) {
-            $scheduleDetails = new ScheduleDetail();
+        $this->createScheduleDetail($schedule, $attributes);
 
-            $scheduleDetails->schedule()->associate($schedule->id);
-            $scheduleDetails->employee()->associate($scheduleDetail['employee_id']);
-            $scheduleDetails->audience()->associate($scheduleDetail['audience_id']);
-
-            $scheduleDetails->save();
-        }
+        Cache::put($schedule->getCacheKey($schedule->id), $schedule, Carbon::now()->addMinutes(15));
 
         return $schedule;
     }
@@ -58,23 +83,13 @@ class ScheduleService extends BaseService
         $schedule = $this->find($id);
 
         $schedule->update($attributes);
-        $schedule->discipline()->associate($attributes['discipline_id']);
-        $schedule->classTime()->associate($attributes['class_time_id']);
-        $schedule->group()->associate($attributes['group_id']);
+        $this->associateWithSchedule($schedule, $attributes);
         $schedule->scheduleDetails()->delete();
         $schedule->save();
 
         Cache::put($schedule->getCacheKey($id), $schedule, Carbon::now()->addMinutes(15));
 
-        foreach ($attributes['schedule_details'] as $scheduleDetail) {
-            $scheduleDetails = new ScheduleDetail();
-
-            $scheduleDetails->schedule()->associate($schedule->id);
-            $scheduleDetails->employee()->associate($scheduleDetail['employee_id']);
-            $scheduleDetails->audience()->associate($scheduleDetail['audience_id']);
-
-            $scheduleDetails->save();
-        }
+        $this->createScheduleDetail($schedule, $attributes);
 
         return $schedule;
     }
