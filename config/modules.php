@@ -15,10 +15,13 @@ return [
         'Admin' => [
             'Auth',
             'Audience',
+            'Change',
             'ClassTime',
             'Discipline',
             'Employee',
             'Group',
+            'Holiday',
+            'Schedule',
             'Semester',
             'Speciality',
             'Student',

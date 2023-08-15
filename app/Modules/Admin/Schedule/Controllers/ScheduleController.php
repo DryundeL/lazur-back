@@ -63,11 +63,11 @@ class ScheduleController extends Controller
      */
     public function show(int $id): ScheduleResource
     {
-        $employee = Cache::remember(Schedule::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
+        $schedule = Cache::remember(Schedule::getCacheKey($id), Carbon::now()->addMinutes(10), function () use ($id) {
             return Schedule::findOrFail($id);
         });
 
-        return new ScheduleResource($employee);
+        return new ScheduleResource($schedule);
     }
 
     /**
@@ -80,9 +80,9 @@ class ScheduleController extends Controller
      */
     public function update(StoreScheduleRequest $request, ScheduleService $service, Schedule $schedule): ScheduleResource
     {
-        $employee = $service->update($request->validated(), $schedule->id);
+        $schedule = $service->update($request->validated(), $schedule->id);
 
-        return new ScheduleResource($employee);
+        return new ScheduleResource($schedule);
     }
 
     /**

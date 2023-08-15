@@ -18,15 +18,13 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:admins')->group(function () {
-    require base_path('app/Modules/Admin/Student/Routes/api.php');
-    require base_path('app/Modules/Admin/Employee/Routes/api.php');
-    require base_path('app/Modules/Admin/Group/Routes/api.php');
-    require base_path('app/Modules/Admin/Speciality/Routes/api.php');
-    require base_path('app/Modules/Admin/Audience/Routes/api.php');
-    require base_path('app/Modules/Admin/Discipline/Routes/api.php');
-    require base_path('app/Modules/Admin/ClassTime/Routes/api.php');
-    require base_path('app/Modules/Admin/Semester/Routes/api.php');
-    require base_path('app/Modules/Admin/Holiday/Routes/api.php');
-    require base_path('app/Modules/Admin/Schedule/Routes/api.php');
+    $modules = config('modules.modules');
+
+    foreach ($modules as $module => $subModules) {
+        foreach ($subModules as $subModule) {
+            require base_path("app/Modules/{$module}/{$subModule}/Routes/api.php");
+        }
+    }
+
 });
 
