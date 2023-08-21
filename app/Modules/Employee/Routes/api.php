@@ -18,6 +18,10 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:employees')->group(function () {
+    $modules = config('modules.modules')['Employee'];
 
+    foreach ($modules as $subModule ) {
+        require base_path("app/Modules/Employee/{$subModule}/Routes/api.php");
+    }
 });
 

@@ -49,7 +49,7 @@ class Schedule extends Model
     }
 
     /**
-     * The group that belong to the schedule.
+     * The discipline that belong to the schedule.
      */
     public function discipline(): BelongsTo
     {

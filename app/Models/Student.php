@@ -4,9 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -65,5 +64,13 @@ class Student extends Authenticatable
     public static function getCacheKey(int $id): string
     {
         return 'student_' . $id;
+    }
+
+    /**
+     * The journal dates that belong to the student.
+     */
+    public function journals(): HasMany
+    {
+        return $this->hasMany(JournalDate::class);
     }
 }

@@ -57,4 +57,12 @@ class Discipline extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+
+    /**
+     * The journal dates that belong to the discipline.
+     */
+    public function journalDates(): HasMany
+    {
+        return $this->hasMany(JournalDate::class);
+    }
 }

@@ -2,12 +2,12 @@
 
 namespace App\Modules\Admin\Change\Services;
 
+use App\Models\Change;
+use App\Models\ChangeDetail;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Change;
-use App\Models\ChangeDetail;
 
 class ChangeService extends BaseService
 {
@@ -83,8 +83,8 @@ class ChangeService extends BaseService
         $change = $this->find($id);
 
         $change->update($attributes);
-        $this->associateWithChange($change, $attributes);
         $change->changeDetails()->delete();
+        $this->associateWithChange($change, $attributes);
         $change->save();
 
         Cache::put($change->getCacheKey($id), $change, Carbon::now()->addMinutes(15));

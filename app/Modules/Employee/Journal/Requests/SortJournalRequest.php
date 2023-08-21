@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Admin\Change\Requests;
+namespace App\Modules\Employee\Journal\Requests;
 
 use App\Requests\BaseSortRequest;
 
-class SortChangeRequest extends BaseSortRequest
+class SortJournalRequest extends BaseSortRequest
 {
     /**
      * The sortable fields.
@@ -25,10 +25,9 @@ class SortChangeRequest extends BaseSortRequest
         return array_merge(parent::rules(), [
             'paginated' => 'nullable|integer',
             'id' => 'nullable|integer',
-            'date' => 'nullable|date',
-            'discipline_id' => 'nullable|integer|exists:App\Models\Discipline,id',
-            'group_id' => 'nullable|integer|exists:App\Models\Group,id',
-            'class_time_id' => 'nullable|integer|exists:App\Models\ClassTime,id'
+            'mark' => 'nullable|string',
+            'journal_date_id' => 'nullable|integer|exists:App\Models\JournalDate,id',
+            'student_id' => 'nullable|integer|exists:App\Models\Student,id',
         ]);
     }
 }

@@ -73,4 +73,12 @@ class Group extends Model
         return 'group_' . $id;
     }
 
+    /**
+     * The journal dates that belong to the group.
+     */
+    public function journalDates(): HasMany
+    {
+        return $this->hasMany(JournalDate::class);
+    }
+
 }
