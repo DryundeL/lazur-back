@@ -71,6 +71,7 @@ class GenerateDatesCommand extends Command
         $groupDates = $dates->groupBy(['discipline_id', 'group_id']);
 
         foreach ($groupDates as $groupDate) {
+
             foreach ($groupDate as $item) {
                 $date = new JournalDate();
                 $date->discipline_id = $item->first()->discipline_id;
@@ -79,6 +80,7 @@ class GenerateDatesCommand extends Command
                 $date->count = $item->count();
                 $date->save();
             }
+
         }
 
         return Command::SUCCESS;
