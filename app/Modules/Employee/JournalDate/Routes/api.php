@@ -13,4 +13,4 @@ use App\Modules\Employee\JournalDate\Controllers\JournalDateController;
 |
 */
 
-Route::apiResource('/journal_dates', JournalDateController::class);
+Route::apiResource('/journal_dates', JournalDateController::class)->except('update', 'destroy', 'store');
