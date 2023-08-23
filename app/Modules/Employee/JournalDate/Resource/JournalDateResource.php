@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Modules\Admin\Change\Resources;
+namespace App\Modules\Employee\JournalDate\Resource;
 
 use App\Resources\BaseResource;
 use Illuminate\Http\Request;
 
-class ChangeResource extends BaseResource
+class JournalDateResource extends BaseResource
 {
     /**
      * The "data" wrapper that should be applied.
      *
      * @var string|null
      */
-    public static $wrap = 'change';
+    public static $wrap = 'journal_date';
 
     /**
      * Transform the resource into an array.
@@ -24,10 +24,7 @@ class ChangeResource extends BaseResource
     {
         return array_merge(parent::toArray($request), [
             'date' => $this->date,
-            'group' => GroupResource::make($this->group),
-            'class_time' => ClassTimeResource::make($this->classTime),
-            'discipline' => DisciplineResource::make($this->discipline),
-            'change_details' => ChangeDetailResource::collection($this->changeDetails),
+            'count' => $this->count,
         ]);
     }
 }

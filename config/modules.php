@@ -26,5 +26,9 @@ return [
             'Speciality',
             'Student',
         ],
+        'Employee' => [
+            'Journal',
+            'JournalDate',
+        ]
     ]
 ];

@@ -17,8 +17,7 @@ class Change extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'week_type',
-        'day_of_week',
+        'date'
     ];
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Modules\Employee\Journal\Controllers\JournalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,15 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    require base_path('app/Modules/Admin/Auth/Routes/api.php');
-});
-
-Route::middleware('auth:admins')->group(function () {
-    $modules = config('modules.modules')['Admin'];
-
-    foreach ($modules as $subModule ) {
-        require base_path("app/Modules/Admin/{$subModule}/Routes/api.php");
-    }
-});
-
+Route::apiResource('/journals', JournalController::class);
