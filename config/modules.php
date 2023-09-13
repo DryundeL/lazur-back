@@ -29,6 +29,9 @@ return [
         'Employee' => [
             'Journal',
             'JournalDate',
+        ],
+        'Student' =>[
+            'Schedule',
         ]
     ]
 ];
