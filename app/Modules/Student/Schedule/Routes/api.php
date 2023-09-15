@@ -16,4 +16,4 @@ use App\Modules\Student\Schedule\Controllers\ScheduleController;
 
 
 Route::get('/schedules', [ScheduleController::class, 'index']);
-Route::get('/schedules/import', [ScheduleController::class, 'import']);
+Route::get('/schedules/export', [ScheduleController::class, 'export']);
