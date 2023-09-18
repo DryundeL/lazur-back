@@ -35,6 +35,7 @@ class ScheduleSeeder extends Seeder
         $weekTypes = [
             'Чётная',
             'Нечётная',
+            null
         ];
         $specialityIds = Speciality::pluck('id')->toArray();
         $disciplines = [
@@ -83,7 +84,7 @@ class ScheduleSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
-        $groupId = 1;
+        $groupId = 2;
         $employeeIds = Employee::pluck('id')->toArray();
         $disciplineIds = Discipline::pluck('id')->toArray();
         $classTimeIds = ClassTime::pluck('id')->toArray();

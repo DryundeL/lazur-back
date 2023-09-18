@@ -2,25 +2,22 @@
 
 namespace App\Modules\Student\Schedule\Controllers;
 
-use App\Models\Discipline;
 use App\Models\Schedule;
-use App\Models\Speciality;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Spatie\IcalendarGenerator\Components\Calendar;
+use Spatie\IcalendarGenerator\Components\Event;
+use Spatie\IcalendarGenerator\Enums\RecurrenceFrequency;
+use Spatie\IcalendarGenerator\ValueObjects\RRule;
 use App\Modules\Student\Schedule\Requests\SortScheduleRequest;
 use App\Modules\Student\Schedule\Resources\ScheduleCollection;
 use App\Modules\Student\Schedule\Services\ScheduleService;
 use App\Http\Controllers\BaseController as Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Spatie\IcalendarGenerator\Components\Calendar;
-use Spatie\IcalendarGenerator\Components\Event;
-use Spatie\IcalendarGenerator\Properties\TextProperty;
-
 
 class ScheduleController extends Controller
 {
@@ -50,42 +47,80 @@ class ScheduleController extends Controller
         }
     }
 
+    /**
+     * Returns student`s schedule in ics format
+     *
+     * @return Application|ResponseFactory|\Illuminate\Foundation\Application|Response
+     * @throws \Exception
+     */
     public function export()
     {
-//        $currentMonth = Carbon::now()->format('m');
-//        $currentYear = Carbon::now()->format('Y');
-//        $today = Carbon::parse(Carbon::now()->format('Y-m-d'));
-//        $today = Carbon::parse('2023-09-16');
-//
-//        if ($currentMonth < 9) {
-//            $currentYear--;
+        $currentMonth = Carbon::now()->format('m');
+        $startStudyYear = Carbon::now()->format('Y');
+        $dayOfWeekTypes = array_flip([
+            'Воскресенье',
+            'Понедельник',
+            'Вторник',
+            'Среда',
+            'Четверг',
+            'Пятница',
+            'Суббота',
+        ]);
+
+        if ($currentMonth < 9) {
+            $startStudyYear--;
+        }
+
+        $endStudyDate = new DateTime('01-07-' . $startStudyYear + 1);
+        $startStudyDay = Carbon::parse("{$startStudyYear}-09-01");
+        $numberOfFirstStudyWeek = $startStudyDay->format('W');
+        $events = [];
+
+//        $startStudyDayOfWeek = $startStudyDay->format('l');
+//        if ($startStudyDayOfWeek != 'Saturday' or $startStudyDayOfWeek != 'Sunday') {
+//            $numberOfFirstStudyWeek = $startStudyDay->format('W');
+//        } else {
+//            $numberOfFirstStudyWeek = 1 + (int) $startStudyDay->format('W');
 //        }
-//
-//        dd($today->diffInDays(Carbon::parse("{$currentYear}-09-01"))/7);   1 сентября не в пн
-        $a = Schedule::select()
+
+        $schedules = Schedule::select()
             ->where('group_id',  Auth::user()->group->first()->id)
-        ->get();
+            ->leftJoin('class_times as c', 'c.id', '=', 'schedules.class_time_id')
+            ->leftJoin('disciplines as d', 'd.id', '=', 'schedules.discipline_id')
+            ->get();
 
-        $schedules = new ScheduleCollection($a);
-        $calendar = Calendar::create()
-            ->event(function(Event $event) use ($schedules) {
-                foreach ($schedules as $schedule) {
-                    $event->name($schedule->discipline->name)
-                        ->period(new DateTime('6 march 2019'), new DateTime('7 march 2019'));
+        foreach ($schedules as $schedule) {
+            $day = $startStudyDay->firstOfMonth($dayOfWeekTypes[$schedule->day_of_week])->format('d');
+            $date = Carbon::parse("{$startStudyYear}-09-{$day}");
+            $weekType = ((int) $date->format('W') -  $numberOfFirstStudyWeek) % 2 === 0 ? 'Четная' : 'Нечетная';
+
+            if ($schedule->week_type) {
+                $interval = 2;
+                if ($schedule->week_type != $weekType) {
+                    $day = (int) $day + 7;
                 }
+            } else {
+                $interval = 1;
+            }
 
-            })
-//            ->event([
-//                Event::create('Creating calender feeds')
-//                    ->period(new DateTime('6 march 2019'), new DateTime('7 march 2019')),
-//                Event::create('Creating calenderfs')
-//                    ->period(new DateTime('6 march 2022'), new DateTime('7 march 2022')),
-//            ])
-        ->get();
+            $start_time = new DateTime("{$day}-09-{$startStudyYear} {$schedule->time_start}");
+            $end_time = new DateTime("{$day}-09-{$startStudyYear} {$schedule->time_end}");
+
+            $events[] = Event::create()
+                ->name($schedule->name)
+                ->period($start_time, $end_time)
+                ->rrule(RRule::frequency(RecurrenceFrequency::weekly())
+                    ->interval($interval)
+                    ->until($endStudyDate));
+        }
+
+        $calendar = Calendar::create()
+            ->event($events)
+            ->get();
 
         return response($calendar, 200, [
             'Content-Type' => 'text/calendar; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="my-awesome-calendar.ics"',
+            'Content-Disposition' => 'attachment; filename="calendar.ics"',
         ]);
     }
 }

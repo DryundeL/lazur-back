@@ -45,7 +45,7 @@ class StoreScheduleRequest extends FormRequest
                 Rule::in($dayOfWeekTypes)
             ],
             'week_type' => [
-                'required', 'string',
+                'nullable', 'string',
                 Rule::in($weekTypes)
             ],
             'group_id' => 'required|integer|exists:App\Models\Group,id',
