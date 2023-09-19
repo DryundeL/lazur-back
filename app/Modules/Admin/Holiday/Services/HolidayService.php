@@ -2,10 +2,10 @@
 
 namespace App\Modules\Admin\Holiday\Services;
 
-use App\Models\Holiday;
 use App\Services\BaseService;
 use DOMDocument;
 use DOMXPath;
+use App\Models\Holiday;
 
 class HolidayService extends BaseService
 {
@@ -20,9 +20,9 @@ class HolidayService extends BaseService
      * @param string $year
      * @return bool
      */
-    public function parse(string $year): bool
+    static function parse(string $year): bool
     {
-        Holiday::query()->truncate();
+//        Holiday::query()->truncate();
 
         $page = file_get_contents('https://www.consultant.ru/law/ref/calendar/proizvodstvennye/' . $year);
 

@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Modules\Student\Schedule\Controllers\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,15 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    require base_path('app/Modules/Student/Auth/Routes/api.php');
-});
 
-Route::middleware('auth:students')->group(function () {
-    $modules = config('modules.modules')['Student'];
 
-    foreach ($modules as $subModule ) {
-        require base_path("app/Modules/Student/{$subModule}/Routes/api.php");
-    }
-});
-
+Route::get('/schedules', [ScheduleController::class, 'index']);
+Route::get('/schedules/export', [ScheduleController::class, 'export']);
