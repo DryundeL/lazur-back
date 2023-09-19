@@ -14,6 +14,7 @@ class SortScheduleRequest extends BaseSortRequest
      */
     protected $sortableFields = [
         'id',
+        'date'
     ];
 
     /**

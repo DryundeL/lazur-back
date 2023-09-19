@@ -43,9 +43,15 @@ class GenerateDatesCommand extends Command
             'Воскресенье'
         ];
 
-        $numberWeek = Carbon::now()->weekOfYear;
+        $currentMonth = Carbon::now()->format('m');
+        $startStudyYear = Carbon::now()->format('Y');
 
-        $weekType = ($numberWeek % 2 == 0) ? 'Чётная' : 'Нечётная';
+        if ($currentMonth < 9) {
+            $startStudyYear--;
+        }
+
+        $numberOfFirstStudyWeek = Carbon::parse("{$startStudyYear}-09-01")->format('W');
+        $weekType = ((int) now()->format('W') -  $numberOfFirstStudyWeek) % 2 === 0 ? 'Четная' : 'Нечетная';
 
         $currentDayOfWeek = $days[date("N") - 1];
 
